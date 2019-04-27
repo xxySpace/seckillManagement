@@ -1,4 +1,4 @@
-package com.xxy.seckill.seckillManagement;
+package com.xxy.seckill.seckillmanagement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
