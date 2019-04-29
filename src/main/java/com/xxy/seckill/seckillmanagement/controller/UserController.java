@@ -9,9 +9,10 @@ import com.xxy.seckill.seckillmanagement.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Random;
 
 /**
  * @ClassName: UserController
@@ -22,10 +23,38 @@ import org.springframework.web.bind.annotation.ResponseBody;
  **/
 @Controller("user")
 @RequestMapping("/user")
-public class UserController {
+@CrossOrigin
+public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    /**
+     * 用户获取otp短信接口
+     *
+     * @param telphone
+     * @return
+     */
+    @RequestMapping(value = "/getotp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonRetrunType getOtp(@RequestParam(name = "telphone") String telphone) {
+        //需要按照一定的规则生成otp验证码
+        Random random = new Random();
+        int randomInt = random.nextInt(99999);
+        randomInt += 10000;
+        String otpCode = String.valueOf(randomInt);
+
+        //将otp验证码同对应用户的手机号关联，使用httpSession的方式绑定用户的手机号与otpCode
+        httpServletRequest.getSession().setAttribute(telphone, otpCode);
+
+        //将otp验证码通过短信通道发送给用户，省略
+        System.out.println("telphone = " + telphone + " & otpCode = " + otpCode);
+
+        return CommonRetrunType.create(null);
+    }
 
     @RequestMapping("/get")
     @ResponseBody
