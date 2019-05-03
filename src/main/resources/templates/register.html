@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link href="../static/h-ui/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/h-ui/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/h-ui/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/h-ui/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css"/>
+
+    <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="https://code.jquery.com/jquery.js" type="text/javascript"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <title>用户注册</title>
+
+    <style>
+        .loginBox .row{margin-top: 0px;}
+        .form .row {margin-top: 0px;}
+
+    </style>
+</head>
+<body>
+<!--<div class="header"></div>-->
+<div class="loginWraper">
+    <div id="loginform" class="loginBox">
+        <form class="form form-horizontal" action="register.html" method="post">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">手机号：</i></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="telphone" name="telphone" type="text" placeholder="手机号" class="input-text size-S">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">验证码：</i></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="otpCode" name="otpCode" type="text" placeholder="验证码" class="input-text size-S"
+                           style="width:55%"/>
+                    <input id="getotp" name="getotp" type="button" class="btn btn-success radius size-S"
+                           value="获取短信验证码"/>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">用户昵称：</i></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="name" name="name" type="text" placeholder="用户昵称" class="input-text size-S">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">性别：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <div class="radio-box">
+                        <input name="gender" type="radio" id="gender-1" checked>
+                        <label for="gender-1">男</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="gender-2" name="gender">
+                        <label for="gender-2">女</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">年龄：</i></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="age" name="age" type="text" placeholder="年龄" class="input-text size-S">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">密码：</i></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="password" name="password" type="password" placeholder="密码" class="input-text size-S">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">确认密码：</i></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="password2" name="password2" type="password" placeholder="确认密码" class="input-text size-S">
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="formControls col-xs-8 col-xs-offset-4">
+                    <input id="register" name="register" type="submit" class="btn btn-success radius size-L"
+                           value=" 保    存 ">
+                    <input id="cancel" name="cancel" type="reset" class="btn btn-default radius size-L"
+                           value=" 取    消 ">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        //绑定otp的click事件，用于向头端发送获取手机验证码的请求
+        $("#getotp").on("click",function(){
+            var telphone = $("#telphone").val();
+            if(telphone == null || telphone == ""){
+                alert("手机号不能为空");
+                return false;
+            }
+            $.ajax({
+               type:"POST",
+               contentType:"application/x-www-form-urlencoded",
+               url:"http://localhost:8080/user/getotp",
+               data:{
+                   "telphone":$("#telphone").val(),
+               },
+               xhrFields:{withCredentials:true},
+               success:function(data){
+                   if(data.status == "success"){
+                       alert("短信验证码已经发送到了您的手机上，请注意查收");
+                   }else{
+                       alert("短信验证码发送失败，原因为"+ data.data.errMsg);
+                   }
+               },
+               error:function(data){
+                   alert("短信验证码发送失败，原因为"+ data.responseText);
+               }
+            });
+            return false;
+        });
+        //实现用户注册
+        $("#register").on("click",function(){
+            var telphone = $("#telphone").val();
+            var otpCode = $("#otpCode").val();
+            var name = $("#name").val();
+            var password = $("#password").val();
+            var gender1 = $("#gender-1").val();
+            var gender2 = $("#gender-2").val();
+            var age = $("#age").val();
+            var password = $("#password").val();
+            var password2 = $("#password2").val();
+            if(telphone == null || telphone == ""){
+                alert("手机号不能为空");
+                return false;
+            }
+            if(otpCode == null || otpCode == ""){
+                alert("验证码不能为空");
+                return false;
+            }
+            if(name == null || name == ""){
+                alert("用户昵称不能为空");
+                return false;
+            }
+            if(password == null || password == ""){
+                alert("密码不能为空");
+                return false;
+            }
+            if(age == null || age == ""){
+                alert("年龄不能为空");
+                return false;
+            }
+
+            $.ajax({
+                type:"POST",
+                contentType:"application/x-www-form-urlencoded",
+                url:"http://localhost:8080/user/register",
+                data:{
+                    "telphone":$("#telphone").val(),
+                    "otpCode":otpCode,
+                    "name":name,
+                    "gender":1,
+                    "age":age,
+                    "password":password
+                },
+                xhrFields:{withCredentials:true},
+                success:function(data){
+                    if(data.status == "success"){
+                        alert("注册成功");
+                    }else{
+                        alert("注册失败，原因为"+ data.data.errMsg);
+                    }
+                },
+                error:function(data){
+                    alert("注册失败，原因为"+ data.responseText);
+                }
+            });
+            return false;
+        });
+    });
+
+</script>
+</html>

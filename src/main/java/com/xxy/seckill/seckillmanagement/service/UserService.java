@@ -1,5 +1,6 @@
 package com.xxy.seckill.seckillmanagement.service;
 
+import com.xxy.seckill.seckillmanagement.error.BusinessException;
 import com.xxy.seckill.seckillmanagement.service.model.UserModel;
 
 /**
@@ -16,4 +17,17 @@ public interface UserService {
      * @param id
      */
     UserModel getUserById(Integer id);
+
+    /**
+     * 用户注册
+     * @param userModel
+     */
+    void register(UserModel userModel) throws BusinessException;
+
+    /**
+     * 校验用户端登录是否合法
+     * @param telphone 用户注册手机号
+     * @param encrptPassword 用户加密后的密码
+     */
+    UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException;
 }
