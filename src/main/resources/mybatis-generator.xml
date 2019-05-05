@@ -28,12 +28,22 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--需要生成的实体类对应的表名，多个实体类复制多份该配置即可-->
-        <table tableName="user_info" domainObjectName="UserDAO"
+        <!--<table tableName="user_info" domainObjectName="UserDAO"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
         <table tableName="user_password" domainObjectName="UserPasswordDAO"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>-->
+        <table tableName="item" domainObjectName="ItemDAO"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="item_stock" domainObjectName="ItemStockDAO"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

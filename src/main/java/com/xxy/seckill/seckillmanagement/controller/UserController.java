@@ -29,7 +29,7 @@ import java.util.Random;
  **/
 @Controller("user")
 @RequestMapping("/user")
-@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
+@CrossOrigin(allowCredentials = "true", origins = {"*"})
 public class UserController extends BaseController {
 
     @Autowired
@@ -40,16 +40,17 @@ public class UserController extends BaseController {
 
     /**
      * 用户登录接口
+     *
      * @param telphone
      * @param password
      * @return
      */
     @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonRetrunType login(@RequestParam(name = "telphone")String telphone,
-                                  @RequestParam(name = "password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public CommonRetrunType login(@RequestParam(name = "telphone") String telphone,
+                                  @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
         //入参校验
-        if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
         //用户登录服务，校验用户端登录是否合法
@@ -61,8 +62,10 @@ public class UserController extends BaseController {
 
         return CommonRetrunType.create(null);
     }
+
     /**
      * 用户注册接口
+     *
      * @param telphone
      * @param otpCode
      * @param name
@@ -83,8 +86,8 @@ public class UserController extends BaseController {
                                      @RequestParam(name = "age") Integer age,
                                      @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
         //验证手机号是否和otpCode相符合
-        String inSessionOtpCode = (String)this.httpServletRequest.getSession().getAttribute(telphone);
-        if (!com.alibaba.druid.util.StringUtils.equals(otpCode, inSessionOtpCode)){
+        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telphone);
+        if (!com.alibaba.druid.util.StringUtils.equals(otpCode, inSessionOtpCode)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "您输入的验证码不正确");
         }
         //用户注册流程
@@ -110,6 +113,7 @@ public class UserController extends BaseController {
 
     /**
      * 用户获取otp短信接口
+     *
      * @param telphone
      * @return
      */

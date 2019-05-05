@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
         ValidationResult result = validator.validate(userModel);
-        if (result.isHasErrors()){
+        if (result.isHasErrors()) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, result.getErrMsg());
         }
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         UserDAO userDAO = convertFromModel(userModel);
         try {
             userDAOMapper.insertSelective(userDAO);
-        }catch (DuplicateKeyException ex){
+        } catch (DuplicateKeyException ex) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "该手机号已注册，不能重复注册");
         }
 
@@ -81,13 +81,13 @@ public class UserServiceImpl implements UserService {
     public UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException {
         //通过用户手机号获取用户信息
         UserDAO userDAO = userDAOMapper.selectByTelphone(telphone);
-        if (null == userDAO){
+        if (null == userDAO) {
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
         UserPasswordDAO userPasswordDAO = userPasswordDAOMapper.selectByUserId(userDAO.getId());
         UserModel userModel = convertFromDataObject(userDAO, userPasswordDAO);
         //比对用户信息的加密密码和页面传输密码是否匹配
-        if (!StringUtils.equals(encrptPassword, userModel.getEncrptPassword())){
+        if (!StringUtils.equals(encrptPassword, userModel.getEncrptPassword())) {
             throw new BusinessException((EmBusinessError.USER_LOGIN_FAIL));
         }
         return userModel;

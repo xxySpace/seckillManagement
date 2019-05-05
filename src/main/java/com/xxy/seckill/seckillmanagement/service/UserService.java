@@ -20,13 +20,15 @@ public interface UserService {
 
     /**
      * 用户注册
+     *
      * @param userModel
      */
     void register(UserModel userModel) throws BusinessException;
 
     /**
      * 校验用户端登录是否合法
-     * @param telphone 用户注册手机号
+     *
+     * @param telphone       用户注册手机号
      * @param encrptPassword 用户加密后的密码
      */
     UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException;

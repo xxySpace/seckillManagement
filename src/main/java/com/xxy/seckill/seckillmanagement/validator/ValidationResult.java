@@ -13,10 +13,14 @@ import java.util.Map;
  * @Version: v1.0
  **/
 public class ValidationResult {
-    /** 校验结果是否有错*/
+    /**
+     * 校验结果是否有错
+     */
     private boolean hasErrors = false;
 
-    /** 存放错误信息的map*/
+    /**
+     * 存放错误信息的map
+     */
     private Map<String, String> errorMsgMap = new HashMap<>();
 
     public boolean isHasErrors() {
@@ -37,9 +41,10 @@ public class ValidationResult {
 
     /**
      * 实现通用的通过格式化字符串信息获取错误结果的msg方法
+     *
      * @return
      */
-    public String getErrMsg(){
+    public String getErrMsg() {
         return StringUtils.join(errorMsgMap.values().toArray(), ",");
     }
 }
