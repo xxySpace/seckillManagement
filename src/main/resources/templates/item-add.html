@@ -84,6 +84,7 @@
 <script type="text/javascript" src="../static/h-ui/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 
 <script type="text/javascript">
+    var g_itemVo = {};
     jQuery(document).ready(function () {
         $("#create").on("click", function () {
             var title = $("#title").val();
@@ -136,9 +137,48 @@
             });
             return false;
         });
-
-
+        if (getParam("id") != "undefined" && getParam("id") != null && getParam("id") != "") {
+            //获取商品详情
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/item/get",
+                data: {
+                    "id": getParam("id")
+                },
+                xhrFields: {withCredentials: true},
+                success: function (data) {
+                    if (data.status == "success") {
+                        g_itemVo = data.data;
+                        reloadDom();
+                    } else {
+                        alert("获取信息失败，原因为" + data.data.errMsg);
+                    }
+                },
+                error: function (data) {
+                    alert("获取信息失败，原因为" + data.responseText);
+                }
+            });
+        }
     });
+
+    function reloadDom() {
+        $("#title").val(g_itemVo.title);
+        $("#description").val(g_itemVo.description);
+        $("#price").val(g_itemVo.price);
+        $("#imgUrl").val(g_itemVo.imgUrl);
+        $("#stock").val(g_itemVo.stock);
+    }
+
+    function getParam(name) {
+        var match = new RegExp(name +
+            "=*([^&]+)*", "i").exec(location.search);
+        if (match == null)
+            match = new RegExp(name + "=(.+)", "i").exec(location.search);
+        if (match == null) return null;
+        match = match + "";
+        var result = match.split(",");
+        return decodeURIComponent(result[1]);
+    }
 
 </script>
 </body>

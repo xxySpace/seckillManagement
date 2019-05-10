@@ -38,10 +38,10 @@
                     搜商品
                 </button>
             </div>
-            <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"><a href="javascript:;" onclick="datadel()"
+            <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"><a href="javascript:;" onclick="data_del()"
                                                                        class="btn btn-danger radius"><i
                     class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;"
-                                                                  onclick="item_add('创建商品','item-add.html','','510')"
+                                                                  onclick="item_add('创建商品','item-add.html','','500')"
                                                                   class="btn btn-primary radius"><i
                     class="Hui-iconfont">&#xe600;</i> 创建商品</a></span> <span class="r">共有数据：<strong>88</strong> 条</span>
             </div>
@@ -50,12 +50,11 @@
                     <thead>
                     <tr class="text-c">
                         <th width="25"><input type="checkbox" name="" value=""></th>
-                        <th width="80">商品编号</th>
                         <th width="100">商品名称</th>
-                        <th width="40">价格</th>
-                        <th width="90">描述</th>
-                        <th width="150">销量</th>
                         <th width="200">图片</th>
+                        <th width="200">描述</th>
+                        <th width="50">价格</th>
+                        <th width="50">销量</th>
                         <th width="100">操作</th>
                     </tr>
                     </thead>
@@ -88,6 +87,8 @@
             {"orderable":false,"aTargets":[0,1,2,3,4,5,6]}// 制定列不参与排序
         ]
     });*/
+    //定义全局商品数组信息
+    var g_itemList = [];
     jQuery(document).ready(function () {
         $("#search").on("click", function () {
             $.ajax({
@@ -99,41 +100,40 @@
                 success: function (data) {
                     if (data.status == "success") {
                         $("#tbody").html("");
-                        var object = data.data;
-                        $("#list").val(object);
+                        g_itemList = data.data;
+                        reloadDom();
+                        /*var object = data.data;
                         for (var i = 0; i < object.length; i++) {
                             var tr = document.createElement('tr');
                             tr.setAttribute("class", "text-c");
+                            tr.setAttribute("id", "itemDetail"+object[i].id);
 
                             var tdCheck = document.createElement('td');
-                            var tdId = document.createElement('td');
                             var tdTitle = document.createElement('td');
-                            var tdPrice = document.createElement('td');
-                            var tdDescription = document.createElement('td');
-                            var tdSales = document.createElement('td');
                             var tdImgUrl = document.createElement('td');
+                            var tdDescription = document.createElement('td');
+                            var tdPrice = document.createElement('td');
+                            var tdSales = document.createElement('td');
                             var tdOperation = document.createElement('td');
 
                             tdCheck.innerHTML = "<input type=\"checkbox\" value=\"1\" name=\"\">";
-                            tdId.innerHTML = object[i].id;
                             tdTitle.innerHTML = object[i].title;
-                            tdPrice.innerHTML = object[i].price;
+                            tdImgUrl.innerHTML = "<img style='width: 100px;height: auto' src='"+object[i].imgUrl+"'/>";
                             tdDescription.innerHTML = object[i].description;
+                            tdPrice.innerHTML = object[i].price;
                             tdSales.innerHTML = object[i].sales;
-                            tdImgUrl.innerHTML = object[i].imgUrl;
-                            tdOperation.innerHTML = "<a title=\"编辑\" href=\"javascript:;\" onclick=\"member_edit('编辑','member-add.html','4','','510')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"member_del(this,'1')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a>";
+                            tdOperation.innerHTML = "<a title=\"编辑\" href=\"javascript:;\" onclick=\"item_edit('编辑','item-add.html','4','','510')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del(this,'1')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a>";
 
                             tr.appendChild(tdCheck);
-                            tr.appendChild(tdId);
                             tr.appendChild(tdTitle);
-                            tr.appendChild(tdPrice);
-                            tr.appendChild(tdDescription);
-                            tr.appendChild(tdSales);
                             tr.appendChild(tdImgUrl);
+                            tr.appendChild(tdDescription);
+                            tr.appendChild(tdPrice);
+                            tr.appendChild(tdSales);
                             tr.appendChild(tdOperation);
                             var tbody = document.getElementById('tbody');
                             tbody.appendChild(tr);
-                        }
+                        }*/
                     } else {
                         alert("查询失败，原因为" + data.data.errMsg);
                     }
@@ -142,9 +142,44 @@
                     alert("查询失败，原因为" + data.responseText);
                 }
             });
-            return false;
         });
     });
+
+    function reloadDom() {
+        for (var i = 0; i < g_itemList.length; i++) {
+            var itemVo = g_itemList[i];
+            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\"1\" name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
+                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"item_edit('编辑','item-add.html?id=" + itemVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+                "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del(this,'1')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>"
+            $("#tbody").append($(dom));
+            $("#itemDetail" + itemVo.id).on("click", function (e) {
+                //window.location.href="getitem.html?id="+$(this).data("id");
+                layer_show("商品详情", "getitem.html?id=" + $(this).data("id"), "550", "500");
+            });
+        }
+    }
+
+    function data_del() {
+        alert("批量删除");
+    }
+
+    /*商品-创建*/
+    function item_add(title, url, w, h) {
+        layer_show(title, url, w, h);
+    }
+
+    /*商品-修改*/
+    function item_edit(title, url, w, h) {
+        layer_show(title, url, w, h);
+    }
+
+    /*商品-删除*/
+    function item_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!', {icon: 1, time: 1000});
+        });
+    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
