@@ -85,6 +85,19 @@ public class ItemServiceImpl implements ItemService {
         return itemModel;
     }
 
+    @Override
+    @Transactional
+    public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
+        int affectedRow = itemStockDAOMapper.decreaseStock(itemId, amount);
+        if (affectedRow > 0){
+            //更新库存成功
+            return true;
+        }else {
+            //更新库存失败
+            return false;
+        }
+    }
+
     private ItemStockDAO convertItemStockDAOFromItemModel(ItemModel itemModel) {
         if (null == itemModel) {
             return null;
