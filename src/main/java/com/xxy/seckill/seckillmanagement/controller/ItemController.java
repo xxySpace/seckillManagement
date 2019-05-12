@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  **/
 @Controller("item")
 @RequestMapping("/item")
-@CrossOrigin(origins = {"*"}, allowCredentials = "true")
+@CrossOrigin(allowCredentials = "true", origins = {"*"})
 public class ItemController extends BaseController {
 
     @Autowired

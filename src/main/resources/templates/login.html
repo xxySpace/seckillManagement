@@ -20,7 +20,14 @@
     <title>用户登录</title>
 </head>
 <body>
-<div class="header"></div>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top" style="background:#426374">
+        <div class="container-fluid cl"
+             style="font-family:'NSimSun';font-size: xx-large;font-weight: bold;font-style: italic">
+            <font color="#f0f8ff">&nbsp;商品秒杀系统</font>
+        </div>
+    </div>
+</header>
 <div class="loginWraper">
     <div id="loginform" class="loginBox">
         <form class="form form-horizontal" action="login.html" method="post">
@@ -38,13 +45,16 @@
             </div>
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
-                    <input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码'}" onclick="if(this.value=='验证码'){this.value='';}" value="验证码" style="width:150px;">
-                    <img src=""> <a id="kanbuq" href="javascript:;">看不清，换一张</a> </div>
+                    <input class="input-text size-L" type="text" placeholder="验证码"
+                           onblur="if(this.value==''){this.value='验证码'}" onclick="if(this.value=='验证码'){this.value='';}"
+                           value="验证码" style="width:150px;">
+                    <img src=""> <a id="kanbuq" href="javascript:;">看不清，换一张</a></div>
             </div>
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
                     <input id="login" name="login" type="submit" class="btn btn-success radius size-L" value=" 登    录 ">
-                    <input id="register" name="register" type="reset" class="btn btn-default radius size-L" value=" 注    册 ">
+                    <input id="register" name="register" type="reset" class="btn btn-default radius size-L"
+                           value=" 注    册 ">
                 </div>
             </div>
         </form>
@@ -53,46 +63,46 @@
 </body>
 
 <script>
-    jQuery(document).ready(function(){
+    jQuery(document).ready(function () {
         //绑定login的click事件，用于用户登录请求
-        $("#login").on("click",function(){
+        $("#login").on("click", function () {
             var telphone = $("#telphone").val();
             var password = $("#password").val();
-            if(telphone == null || telphone == ""){
+            if (telphone == null || telphone == "") {
                 alert("手机号不能为空");
                 return false;
             }
-            if(password == null || password == ""){
+            if (password == null || password == "") {
                 alert("密码不能为空");
                 return false;
             }
             $.ajax({
-                type:"POST",
-                contentType:"application/x-www-form-urlencoded",
-                url:"http://localhost:8080/user/login",
-                data:{
-                    "telphone":$("#telphone").val(),
-                    "password":password
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                url: "http://localhost:8080/user/login",
+                data: {
+                    "telphone": $("#telphone").val(),
+                    "password": password
                 },
-                success:function(data){
-                    if(data.status == "success"){
+                xhrFields: {withCredentials: true},
+                success: function (data) {
+                    if (data.status == "success") {
                         alert("登录成功");
-                    }else{
-                        alert("用户登录失败，原因为"+ data.data.errMsg);
+                        window.location.href = "qryitem.html";
+                    } else {
+                        alert("用户登录失败，原因为" + data.data.errMsg);
                     }
                 },
-                error:function(data){
-                    alert("用户登录失败，原因为"+ data.responseText);
+                error: function (data) {
+                    alert("用户登录失败，原因为" + data.responseText);
                 }
             });
             return false;
         });
-        $("#register").on("click",function(){
-            window.location.href="register.html";
+        $("#register").on("click", function () {
+            window.location.href = "register.html";
         });
     });
-
-
 
 
 </script>

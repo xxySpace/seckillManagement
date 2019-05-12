@@ -60,7 +60,7 @@
             </div>
             件
         </div>
-        <div class="row cl" id="orderOperation">
+        <div id="orderOperation">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
                 <button id="createOrder" name="createOrder" class="btn btn-primary radius" type="submit">
                     下单&nbsp;
@@ -108,11 +108,45 @@
             }
         });
         if (getParam("type") != null && getParam("type") != "" && getParam("type") == "order") {
-            $("orderOperation").style.display = "block";
-        }else{
-            $("orderOperation").style.display = "none";
+            document.getElementById("orderOperation").style.display = 'block';
+        } else {
+            document.getElementById("orderOperation").style.display = 'none';
         }
+        $("#createOrder").on("click", function () {
+            $.ajax({
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                url: "http://localhost:8080/order/createorder",
+                data: {
+                    "itemId": g_itemVo.id,
+                    "amount": 1
+                },
+                xhrFields: {withCredentials: true},
+                async: false,
+                success: function (data) {
+                    if (data.status == "success") {
+                        var index = parent.layer.getFrameIndex(window.name);//获取当前弹出层的层级
+                        window.parent.location.reload();//刷新父页面
+                        parent.layer.close(index);//关闭弹出层
+                    } else {
+                        alert("下单失败，原因为" + data.data.errMsg);
+                        if (data.data.errCode == 20003) {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            window.parent.location.href = "login.html";//跳转登录页面
+                            parent.layer.close(index);
+                        }
+                    }
+                },
+                error: function (data) {
+                    alert("下单失败，原因为" + data.responseText);
+                }
+            });
+        });
     });
+
+    function modalAlert() {
+        $.Huimodalalert('下单成功', 2000);
+    }
 
     function reloadDom() {
         $("#title").text(g_itemVo.title);

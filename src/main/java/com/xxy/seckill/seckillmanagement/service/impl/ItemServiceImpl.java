@@ -98,6 +98,12 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Override
+    @Transactional
+    public void increaseSales(Integer itemId, Integer amount) throws BusinessException {
+        itemDAOMapper.increaseSales(itemId, amount);
+    }
+
     private ItemStockDAO convertItemStockDAOFromItemModel(ItemModel itemModel) {
         if (null == itemModel) {
             return null;

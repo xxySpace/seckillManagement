@@ -1,6 +1,7 @@
 package com.xxy.seckill.seckillmanagement.dao;
 
 import com.xxy.seckill.seckillmanagement.dataobject.ItemDAO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -56,4 +57,6 @@ public interface ItemDAOMapper {
      * @mbg.generated Sat May 04 11:21:13 CST 2019
      */
     int updateByPrimaryKey(ItemDAO record);
+
+    int increaseSales(@Param("id")Integer id, @Param("amount")Integer amount);
 }

@@ -45,4 +45,12 @@ public interface ItemService {
      * @throws BusinessException
      */
     boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException;
+
+    /**
+     * 销量增加
+     * @param itemId
+     * @param amount
+     * @throws BusinessException
+     */
+    void increaseSales(Integer itemId, Integer amount) throws BusinessException;
 }

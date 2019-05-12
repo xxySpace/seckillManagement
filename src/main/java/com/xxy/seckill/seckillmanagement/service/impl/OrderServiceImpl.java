@@ -1,8 +1,9 @@
 package com.xxy.seckill.seckillmanagement.service.impl;
 
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import com.xxy.seckill.seckillmanagement.dao.OrderDAOMapper;
+import com.xxy.seckill.seckillmanagement.dao.SequenceDAOMapper;
 import com.xxy.seckill.seckillmanagement.dataobject.OrderDAO;
+import com.xxy.seckill.seckillmanagement.dataobject.SequenceDAO;
 import com.xxy.seckill.seckillmanagement.error.BusinessException;
 import com.xxy.seckill.seckillmanagement.error.EmBusinessError;
 import com.xxy.seckill.seckillmanagement.service.ItemService;
@@ -14,9 +15,12 @@ import com.xxy.seckill.seckillmanagement.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @ClassName: OrderServiceImpl
@@ -36,30 +40,35 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDAOMapper orderDAOMapper;
 
+    @Autowired
+    private SequenceDAOMapper sequenceDAOMapper;
+
     private static final Integer MIIN_AMOUNT = 0;
 
     private static final Integer MAX_AMOUNT = 99;
+
+    private static final Integer SEQUENCE_MAX_BIT = 6;
 
     @Override
     @Transactional
     public OrderModel createOrder(Integer userId, Integer itemId, Integer amount) throws BusinessException {
         //1、校验下单状态，下单商品是否存在，用户是否合法，购买数量是否合法
         ItemModel itemModel = itemService.getItemById(itemId);
-        if (null == itemModel){
+        if (null == itemModel) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "商品不存在");
         }
 
         UserModel userModel = userService.getUserById(userId);
-        if (null == userModel){
+        if (null == userModel) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户不存在");
         }
-        if (amount <= MIIN_AMOUNT || amount > MAX_AMOUNT){
+        if (amount <= MIIN_AMOUNT || amount > MAX_AMOUNT) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "购买数量不合法");
         }
 
         //2、落单减库存
         boolean result = itemService.decreaseStock(itemId, amount);
-        if (result){
+        if (!result) {
             throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
         }
 
@@ -72,26 +81,54 @@ public class OrderServiceImpl implements OrderService {
         orderModel.setOrderPrice(itemModel.getPrice().multiply(new BigDecimal(amount)));
 
         //生成交易流水号，订单号
+        orderModel.setId(generatorOrderNo());
         OrderDAO orderDAO = convertFromOrderModel(orderModel);
         orderDAOMapper.insertSelective(orderDAO);
 
+        //刷新商品销量
+        itemService.increaseSales(itemId, amount);
+
         //4、返回前端
-        return null;
+        return orderModel;
     }
 
-    private String generatorOrderNo(){
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String generatorOrderNo() {
         //订单号16位
+        StringBuilder stringBuilder = new StringBuilder();
         //前8位为时间信息，年月日
+        LocalDateTime now = LocalDateTime.now();
+        String nowDate = now.format(DateTimeFormatter.ISO_DATE).replace("-", "");
+        stringBuilder.append(nowDate);
 
         //中间6位为自增序列
+        int sequence = 0;
+        SequenceDAO sequenceDAO = sequenceDAOMapper.getSequenceByName("order_info");
+        if (sequenceDAO.getCurrentValue() + sequenceDAO.getStep() <= sequenceDAO.getMaxValue()) {
+            sequence = sequenceDAO.getCurrentValue();
+            sequenceDAO.setCurrentValue(sequenceDAO.getCurrentValue() + sequenceDAO.getStep());
+        } else if (sequenceDAO.getCurrentValue() < sequenceDAO.getMaxValue()) {
+            sequence = sequenceDAO.getCurrentValue();
+            sequenceDAO.setCurrentValue(0);
+        } else {
+            sequence = 0;
+            sequenceDAO.setCurrentValue(0 + sequenceDAO.getStep());
+        }
+        sequenceDAOMapper.updateByPrimaryKey(sequenceDAO);
+        String sequenceStr = String.valueOf(sequence);
+        for (int i = 0; i < SEQUENCE_MAX_BIT - sequenceStr.length(); i++) {
+            stringBuilder.append(0);
+        }
+        stringBuilder.append(sequenceStr);
 
-        //最后2位为分库分表位
+        //最后2位为分库分表位，暂时写死
+        stringBuilder.append("00");
 
-        return null;
+        return stringBuilder.toString();
     }
 
-    private OrderDAO convertFromOrderModel(OrderModel orderModel){
-        if (null == orderModel){
+    private OrderDAO convertFromOrderModel(OrderModel orderModel) {
+        if (null == orderModel) {
             return null;
         }
         OrderDAO orderDAO = new OrderDAO();
