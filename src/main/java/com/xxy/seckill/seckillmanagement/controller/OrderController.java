@@ -32,7 +32,8 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/createorder", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonRetrunType createOrder(@RequestParam(name = "itemId") Integer itemId,
-                                        @RequestParam(name = "amount") Integer amount) throws BusinessException {
+                                        @RequestParam(name = "amount") Integer amount,
+                                        @RequestParam(name = "promoId", required = false) Integer promoId) throws BusinessException {
         Boolean isLogin = (Boolean) httpServletRequest.getSession().getAttribute("IS_LOGIN");
         if (null == isLogin || !isLogin.booleanValue()) {
             throw new BusinessException(EmBusinessError.USER_NOT_LOGIN, "用户未登录，不能下单");
@@ -41,7 +42,7 @@ public class OrderController extends BaseController {
         UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("LOGIN_USER");
 
         //封装service请求用来下单
-        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, amount);
+        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
 
         return CommonRetrunType.create(null);
     }

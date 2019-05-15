@@ -7,7 +7,9 @@ import com.xxy.seckill.seckillmanagement.dataobject.ItemStockDAO;
 import com.xxy.seckill.seckillmanagement.error.BusinessException;
 import com.xxy.seckill.seckillmanagement.error.EmBusinessError;
 import com.xxy.seckill.seckillmanagement.service.ItemService;
+import com.xxy.seckill.seckillmanagement.service.PromoService;
 import com.xxy.seckill.seckillmanagement.service.model.ItemModel;
+import com.xxy.seckill.seckillmanagement.service.model.PromoModel;
 import com.xxy.seckill.seckillmanagement.validator.ValidationResult;
 import com.xxy.seckill.seckillmanagement.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +39,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemStockDAOMapper itemStockDAOMapper;
+
+    @Autowired
+    private PromoService promoService;
+
+    private static final Integer PROMO_FINISH = 3;
 
     @Override
     @Transactional
@@ -82,6 +89,11 @@ public class ItemServiceImpl implements ItemService {
         //将dataObject -> model
         ItemModel itemModel = convertModelFromDataObject(itemDAO, itemStockDAO);
 
+        //获取活动商品信息
+        PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
+        if (null != promoModel && PROMO_FINISH != promoModel.getStatus().intValue()) {
+            itemModel.setPromoModel(promoModel);
+        }
         return itemModel;
     }
 
@@ -89,10 +101,10 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
         int affectedRow = itemStockDAOMapper.decreaseStock(itemId, amount);
-        if (affectedRow > 0){
+        if (affectedRow > 0) {
             //更新库存成功
             return true;
-        }else {
+        } else {
             //更新库存失败
             return false;
         }
