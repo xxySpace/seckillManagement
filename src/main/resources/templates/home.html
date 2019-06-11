@@ -7,8 +7,6 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link rel="Bookmark" href="favicon.ico" >
-    <link rel="Shortcut Icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" href="../static/h-ui/static/h-ui/css/H-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="../static/h-ui/static/h-ui.admin/css/H-ui.admin.css" />
     <link rel="stylesheet" type="text/css" href="../static/h-ui/lib/Hui-iconfont/1.0.8/iconfont.css" />
@@ -18,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="../static/loadarticle.css" />
     <title>首页</title>
 </head>
-<body>
+<body onload="getUserInfo()">
 
 <header class="navbar-wrapper">
     <div class="navbar navbar-fixed-top" style="height: 45px">
@@ -30,15 +28,15 @@
             </nav>
             <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
                 <ul class="cl">
-                    <li>子慕鱼</li>
-                    <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+                    <li>欢迎</li>
+                    <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A"><label id="userName">admin</label> <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
-                            <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-                            <li><a href="#">切换账户</a></li>
-                            <li><a href="#">退出</a></li>
+                            <li><a href="javascript:;" onClick="myLoginInfo()">个人信息</a></li>
+                            <li><a href="#" onclick="changeUser()">切换账户</a></li>
+                            <li><a href="#" onclick="closeWebPage()">退出</a></li>
                         </ul>
                     </li>
-                    <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+                    <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger" id="infoCount">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
                     <li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
@@ -124,10 +122,43 @@
 <script type="text/javascript" src="../static/h-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript">
-    function myselfinfo() {
-        $.Huimodalalert('ok', 2000);
+    /*function getUserInfo() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/user/getuserinfo",
+            xhrFields: {withCredentials: true},
+            async: false,
+            success: function (data) {
+                if (data.status == "success") {
+                    var g_userVo = data.data;
+                    $("#userName").text(g_userVo.name);
+                } else {
+                    alert("获取登录信息失败，原因为" + data.data.errMsg);
+                    if (data.data.errCode == 20003) {
+                        window.location.href = "login.html";//跳转登录页面
+                    }
+                }
+            },
+            error: function (data) {
+                alert("获取登录信息失败，原因为" + data.responseText);
+            }
+        });
     }
+    function myLoginInfo() {
+        layer_show("个人信息", "userinfo.html", "350", "400");
+    }
+    
+    function changeUser() {
+        window.location.href = "login.html";
+    }
+
+    function quit() {
+        window.opener = null;
+        window.open('','_self','');
+        window.close();
+    }*/
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

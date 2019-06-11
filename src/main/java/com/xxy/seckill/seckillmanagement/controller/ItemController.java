@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,9 @@ public class ItemController extends BaseController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
 
     /**
      * 创建商品
@@ -79,8 +83,10 @@ public class ItemController extends BaseController {
 
     @RequestMapping(value = "/list", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonRetrunType listItem() {
-        List<ItemModel> itemModelList = itemService.listItem();
+    public CommonRetrunType listItem(@RequestParam(name = "title") String title) {
+        List<ItemModel> itemModelList = itemService.listItem(title);
+        Integer queryCount = itemService.listItemCount(title);
+        httpServletRequest.setAttribute("queryCount", queryCount);
 
         //使用Stream api将list内的itemModel转化为itemVo;
         List<ItemVO> itemVOList = itemModelList.stream().map(itemModel -> {
@@ -88,6 +94,13 @@ public class ItemController extends BaseController {
             return itemVO;
         }).collect(Collectors.toList());
         return CommonRetrunType.create(itemVOList);
+    }
+
+    @RequestMapping(value = "/listCount", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonRetrunType listItemCount(@RequestParam(name = "title") String title) {
+        Integer queryCount = itemService.listItemCount(title);
+        return CommonRetrunType.create(queryCount);
     }
 
     private ItemVO convertVOFromModel(ItemModel itemModel) {

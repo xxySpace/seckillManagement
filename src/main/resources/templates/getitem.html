@@ -21,65 +21,49 @@
 <body>
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-article-show">
-        <div id="promoStartDateContainer" class="row cl">
-            <label style="color:blue;" id="promoStatus" class="form-label"></label>
-            <div class="formControls col-xs-10 col-sm-12">
-                <label style="color:red;" id="promoStartDate" class="control-label"/>
-            </div>
+    <table class="table">
+        <tbody>
+        <tr id="promoStartDateContainer">
+            <th class="text-r" width="120px"><label style="color:blue;" id="promoStatus" class="form-label"></label></th>
+            <td><label style="color:red;" id="promoStartDate" class="control-label"/></td>
+        </tr>
+        <tr>
+            <th class="text-r">商品名称：</th>
+            <td><label id="title" class=control-label"></label></td>
+        </tr>
+        <tr>
+            <th class="text-r">商品描述：</th>
+            <td><label id="description" class="control-label"/></td>
+        </tr>
+        <tr id="normalPriceContainer">
+            <th class="text-r">商品价格：</th>
+            <td><label id="price" class="control-label"/>元</td>
+        </tr>
+        <tr id="promoPriceContainer">
+            <th class="text-r">秒杀价格：</th>
+            <td><label style="color:red;" id="promoPrice" class="control-label"/>元</td>
+        </tr>
+        <tr>
+            <th class="text-r">商品图片：</th>
+            <td><img id="imgUrl" style="width: 200px;height: auto"/></td>
+        </tr>
+        <tr>
+            <th class="text-r">商品库存：</th>
+            <td><label id="stock" class="control-label"/></td>
+        </tr>
+        <tr>
+            <th class="text-r">商品销量：</th>
+            <td><label id="sales" class="control-label"/></td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="orderOperation">
+        <div align="center">
+            <button id="createOrder" name="createOrder" class="btn btn-primary radius" type="submit">
+                下单&nbsp;
+            </button>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品名称：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <label id="title" class=control-label"></label>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品描述：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <label id="description" class="control-label"/>
-            </div>
-        </div>
-        <div id="normalPriceContainer" class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品价格：</label>
-            <div class="formControls col-xs-8 col-sm-9" style="width: auto">
-                <label id="price" class="control-label"/>
-            </div>
-            元
-        </div>
-        <div id="promoPriceContainer" class="row cl">
-            <label style="color:red;" class="form-label col-xs-4 col-sm-2">秒杀价格：</label>
-            <div class="formControls col-xs-8 col-sm-9" style="width: auto">
-                <label style="color:red;" id="promoPrice" class="control-label"/>
-            </div>
-            元
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品图片：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <img id="imgUrl" style="width: 200px;height: auto"/>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品库存：</label>
-            <div class="formControls col-xs-8 col-sm-9" style="width: auto">
-                <label id="stock" class="control-label"/>
-            </div>
-            件
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">商品销量：</label>
-            <div class="formControls col-xs-8 col-sm-9" style="width: auto">
-                <label id="sales" class="control-label"/>
-            </div>
-            件
-        </div>
-        <div id="orderOperation">
-            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-                <button id="createOrder" name="createOrder" class="btn btn-primary radius" type="submit">
-                    下单&nbsp;
-                </button>
-            </div>
-        </div>
+    </div>
     </form>
 </div>
 
@@ -183,7 +167,7 @@
                g_itemVo.promoStatus = 2;
                reloadDom();
             }
-            $("#promoStartDate").text("秒杀活动将于"+g_itemVo.startDate+"开始售卖 \r\n倒计时："+delta+"秒");
+            $("#promoStartDate").text("秒杀活动将于"+g_itemVo.startDate+"开始售卖 倒计时："+delta+"秒");
             $("#promoPrice").text(g_itemVo.promoPrice);
 
             $("#createOrder").attr("disabled", true);

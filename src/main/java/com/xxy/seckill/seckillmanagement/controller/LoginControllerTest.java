@@ -45,7 +45,7 @@ public class LoginControllerTest {
     @RequestMapping("/itemadd")
     public String itemadd(Model model, HttpServletResponse response) {
         model.addAttribute("name", "子慕鱼");
-        return "itemadd";
+        return "item-add";
     }
 
     @RequestMapping("/getitem")

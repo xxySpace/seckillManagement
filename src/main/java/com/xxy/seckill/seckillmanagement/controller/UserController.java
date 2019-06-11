@@ -4,10 +4,10 @@ import com.xxy.seckill.seckillmanagement.controller.viewobject.UserVO;
 import com.xxy.seckill.seckillmanagement.error.BusinessException;
 import com.xxy.seckill.seckillmanagement.error.EmBusinessError;
 import com.xxy.seckill.seckillmanagement.response.CommonRetrunType;
+import com.xxy.seckill.seckillmanagement.service.DictService;
 import com.xxy.seckill.seckillmanagement.service.UserService;
 import com.xxy.seckill.seckillmanagement.service.model.UserModel;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -37,6 +38,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private DictService dictService;
 
     /**
      * 用户登录接口
@@ -153,12 +157,33 @@ public class UserController extends BaseController {
         return CommonRetrunType.create(userVO);
     }
 
+    /**
+     * 页面加载的用户登录信息
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/getuserinfo")
+    @ResponseBody
+    public CommonRetrunType getUserInfo() throws BusinessException {
+        //获取session 中的登陆信息
+        Boolean isLogin = (Boolean) httpServletRequest.getSession().getAttribute("IS_LOGIN");
+        if (null == isLogin || !isLogin.booleanValue()) {
+            throw new BusinessException(EmBusinessError.USER_NOT_LOGIN, "用户未登录，请先登陆");
+        }
+        //获取用户登录信息
+        UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("LOGIN_USER");
+        //调用getUser方法返回用户信息
+        return getUser(userModel.getId());
+    }
+
     private UserVO convertFormModel(UserModel userModel) {
+        Map<String, String> genderMap = dictService.getCodeDict("GENDER");
         if (null == userModel) {
             return null;
         }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(userModel, userVO);
+        userVO.setGender(genderMap.get(String.valueOf(userModel.getGender())));
         return userVO;
     }
 }

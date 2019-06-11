@@ -17,7 +17,8 @@
 
 <title>数据字典</title>
 </head>
-<body>
+<body onload="getUserInfo()">
+
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top" style="height: 45px">
 		<div class="container-fluid cl">
@@ -28,15 +29,15 @@
 			</nav>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
-					<li>子慕鱼</li>
-					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+					<li>欢迎</li>
+					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A"><label id="userName">admin</label> <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-							<li><a href="#">切换账户</a></li>
-							<li><a href="#">退出</a></li>
+							<li><a href="javascript:;" onClick="myLoginInfo()">个人信息</a></li>
+							<li><a href="#" onclick="changeUser()">切换账户</a></li>
+							<li><a href="#" onclick="closeWebPage()">退出</a></li>
 						</ul>
 					</li>
-					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger" id="infoCount">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
 					<li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
@@ -103,43 +104,36 @@
 	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统管理 <span class="c-gray en">&gt;</span> 数据字典 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 	<div class="Hui-article">
 		<article class="cl pd-20">
-			<div class="text-c"> 字典名称:
-				<input type="text" class="input-text" id="" name="" style="width:150px">
-				表名: <span class="select-box inline">
-				<select class="select" id="" name="">
-					<option value="0">选择一个系统表名</option>
-					<option value="AccountInfo">AccountInfo</option>
-					<option value="AdminInfo">AdminInfo</option>
-				</select>
-				</span> 字段名: <span class="select-box inline">
-				<select class="select" id="" name="">
+			<div class="text-c"> 字典名称（类别）:
+				<input type="text" class="input-text" id="catalog" name="catalog" style="width:150px">
+				状态: <span class="select-box inline">
+				<select class="select" id="state" name="state">
+					<option value="">=请选择=</option>
+					<option value="0">失效</option>
+					<option value="1">生效</option>
 				</select>
 				</span>
-				<input type="hidden" id="" name="">
-				<button type="submit" class="btn btn-primary radius" id="" name=""><i class="Hui-iconfont">&#xe600;</i> 添加字典</button>
+				<button type="submit" class="btn btn-primary radius" id="dict_add" name="" onclick="data_update('新增字典','dict-add.html','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</button>
+				<button type="submit" class="btn btn-success radius" id="search" name="search"><i class="Hui-iconfont">&#xe665;</i>
+					搜字典
+				</button>
 			</div>
 			<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
 			<div class="mt-20">
-				<table class="table table-border table-bordered table-bg table-hover table-sort">
+				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
 						<tr class="text-c">
 							<th width="25"><input type="checkbox" name="" value=""></th>
 							<th width="80">ID</th>
-							<th>名称</th>
-							<th width="105">表名</th>
-							<th width="105">字段名</th>
+							<th width="80">类别</th>
+							<th width="105">值</th>
+							<th width="105">名称</th>
+							<th>备注</th>
+							<th width="105">状态</th>
 							<th width="100">操作</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="text-c">
-							<td><input type="checkbox" value="" name=""></td>
-							<td>0001</td>
-							<td>城市</td>
-							<td>city</td>
-							<td>city</td>
-							<td class="f-14"><a style="text-decoration:none" onclick="system_data_edit('角色编辑','system-data-edit.html','0001','400','310')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="system_data_del(this,'10001')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
-						</tr>
+					<tbody id="tbody">
 					</tbody>
 				</table>
 			</div>
@@ -157,6 +151,7 @@
 <script type="text/javascript" src="../static/h-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript">
 $('.table-sort').dataTable({
 	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
@@ -166,10 +161,52 @@ $('.table-sort').dataTable({
 	  {"orderable":false,"aTargets":[0,5]}// 制定列不参与排序
 	]
 });
-/*数据字典-编辑*/
-function system_data_edit(title,url,id,w,h){
-  layer_show(title,url,w,h);
+
+//定义全局商品数组信息
+var g_dictList = [];
+jQuery(document).ready(function () {
+	$("#search").on("click", function () {
+		var catalog = $("#catalog").val();
+		var options = $("#state option:selected");
+		var state = options.val();
+		$.ajax({
+			type: "POST",
+			contentType: "application/x-www-form-urlencoded",
+			url: "http://localhost:8080/dict/list",
+			data: {
+				"catalog": catalog,
+				"state": state
+			},
+			xhrFields: {withCredentials: true},
+			success: function (data) {
+				if (data.status == "success") {
+					$("#tbody").html("");
+					g_dictList = data.data;
+					reloadDom();
+				} else {
+					alert("查询失败，原因为" + data.data.errMsg);
+				}
+			},
+			error: function (data) {
+				alert("查询失败，原因为" + data.responseText);
+			}
+		});
+	});
+});
+
+function reloadDom() {
+	for (var i = 0; i < g_dictList.length; i++) {
+		var dictVo = g_dictList[i];
+		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\"1\" name=\"\"></td><td data-id='" + dictVo.id + "' id='itemDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td >" + dictVo.state + "</td>" +
+				"<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"data_update('编辑字典','dict-add.html?id=" + dictVo.id + "&catalog=" + dictVo.catalog + "&value=" + dictVo.value + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+		"<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"system_data_del(this,'1')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
+		$("#tbody").append($(dom));
+		/*$("#dictDetail" + dictVo.id).on("click", function (e) {
+			layer_show("字典详情", 'getdict.html?id=" + $(this).data("id") + "&catalog=" + $(this).data("catalog") + "&value=" + $(this).data("value") + "', "600", "600");
+		});*/
+	}
 }
+
 /*数据字典-删除*/
 function system_data_del(obj,id){
   layer.confirm('确认要删除吗？',function(index){

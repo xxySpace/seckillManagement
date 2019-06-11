@@ -17,7 +17,8 @@
 
 <title>系统日志</title>
 </head>
-<body>
+<body onload="getUserInfo()">
+
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top" style="height: 45px">
 		<div class="container-fluid cl">
@@ -28,15 +29,15 @@
 			</nav>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
-					<li>子慕鱼</li>
-					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+					<li>欢迎</li>
+					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A"><label id="userName">admin</label> <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-							<li><a href="#">切换账户</a></li>
-							<li><a href="#">退出</a></li>
+							<li><a href="javascript:;" onClick="myLoginInfo()">个人信息</a></li>
+							<li><a href="#" onclick="changeUser()">切换账户</a></li>
+							<li><a href="#" onclick="closeWebPage()">退出</a></li>
 						</ul>
 					</li>
-					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger" id="infoCount">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
 					<li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
@@ -168,6 +169,7 @@
 <script type="text/javascript" src="../static/h-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript">
 $('.table-sort').dataTable({
 	"lengthMenu":false,//显示数量选择 

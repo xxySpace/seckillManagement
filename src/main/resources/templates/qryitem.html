@@ -19,7 +19,7 @@
 
     <title>查询商品</title>
 </head>
-<body>
+<body onload="getUserInfo()">
 
 <header class="navbar-wrapper">
     <div class="navbar navbar-fixed-top" style="height: 45px">
@@ -31,15 +31,15 @@
             </nav>
             <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
                 <ul class="cl">
-                    <li>子慕鱼</li>
-                    <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+                    <li>欢迎</li>
+                    <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A"><label id="userName">admin</label> <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
-                            <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-                            <li><a href="#">切换账户</a></li>
-                            <li><a href="#">退出</a></li>
+                            <li><a href="javascript:;" onClick="myLoginInfo()">个人信息</a></li>
+                            <li><a href="#" onclick="changeUser()">切换账户</a></li>
+                            <li><a href="#" onclick="closeWebPage()">退出</a></li>
                         </ul>
                     </li>
-                    <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+                    <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger" id="infoCount">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
                     <li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
@@ -108,12 +108,7 @@
             class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="article">
         <article class="cl pd-20">
-            <div class="text-c"> 日期范围：
-                <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin"
-                       class="input-text Wdate" style="width:120px;">
-                -
-                <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})"
-                       id="datemax" class="input-text Wdate" style="width:120px;">
+            <div class="text-c">
                 <input type="text" class="input-text" style="width:250px" placeholder="输入商品名称" id="title" name="title">
                 <button type="submit" class="btn btn-success radius" id="search" name="search"><i class="Hui-iconfont">&#xe665;</i>
                     搜商品
@@ -149,6 +144,7 @@
 <script type="text/javascript" src="../static/h-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../static/h-ui/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript"  th:inline="none">
     //h-ui框架不好处理分页，所以为了页面的美观性暂时屏蔽分页
     /*$('.table-sort').dataTable({
@@ -163,11 +159,14 @@
     var g_itemList = [];
     jQuery(document).ready(function () {
         $("#search").on("click", function () {
+            var title = $("#title").val();
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
                 url: "http://localhost:8080/item/list",
-                data: {},
+                data: {
+                    "title": title
+                },
                 xhrFields: {withCredentials: true},
                 success: function (data) {
                     if (data.status == "success") {
@@ -192,7 +191,7 @@
             $("#tbody").append($(dom));
             $("#itemDetail" + itemVo.id).on("click", function (e) {
                 //window.location.href="getitem.html?id="+$(this).data("id");
-                layer_show("商品详情", "getitem.html?id=" + $(this).data("id") + "&type=order", "510", "600");
+                layer_show("商品详情", "getitem.html?id=" + $(this).data("id") + "&type=order", "600", "600");
             });
         }
     }

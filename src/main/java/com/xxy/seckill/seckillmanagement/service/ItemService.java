@@ -24,10 +24,17 @@ public interface ItemService {
 
     /**
      * 商品列表浏览
-     *
+     * @param title 商品名称
      * @return
      */
-    List<ItemModel> listItem();
+    List<ItemModel> listItem(String title);
+
+    /**
+     * 商品列表查询数量
+     * @param title 商品名称
+     * @return
+     */
+    Integer listItemCount(String title);
 
     /**
      * 商品详情浏览

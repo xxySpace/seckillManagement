@@ -18,7 +18,7 @@ public class UserModel {
     @NotBlank(message = "用户名不能为空")
     private String name;
 
-    @NotNull(message = "姓名不能不填写")
+    @NotNull(message = "性别不能不填写")
     private Byte gender;
 
     @NotNull(message = "年龄不能不填写")
