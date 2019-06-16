@@ -55,6 +55,11 @@ public class ItemModel {
     private String imgUrl;
 
     /**
+     * 删除和批量删除id集合
+     */
+    private String[] idList;
+
+    /**
      * 使用聚合模型，如果promoModel不为空，则表示拥有还未结束的秒杀活动
      */
     private PromoModel promoModel;
@@ -121,5 +126,13 @@ public class ItemModel {
 
     public void setPromoModel(PromoModel promoModel) {
         this.promoModel = promoModel;
+    }
+
+    public String[] getIdList() {
+        return idList;
+    }
+
+    public void setIdList(String[] idList) {
+        this.idList = idList;
     }
 }

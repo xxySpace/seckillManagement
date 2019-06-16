@@ -113,12 +113,17 @@
 					<option value="1">生效</option>
 				</select>
 				</span>
-				<button type="submit" class="btn btn-primary radius" id="dict_add" name="" onclick="data_update('新增字典','dict-add.html','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</button>
 				<button type="submit" class="btn btn-success radius" id="search" name="search"><i class="Hui-iconfont">&#xe665;</i>
 					搜字典
 				</button>
 			</div>
-			<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l">
+					<a href="javascript:;" onclick="data_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+					<a href="javascript:;" class="btn btn-primary radius" id="dict_add" name="" onclick="data_update('新增字典','dict-add.html','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</a>
+			    </span>
+				<span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
+			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
@@ -172,7 +177,7 @@ jQuery(document).ready(function () {
 		$.ajax({
 			type: "POST",
 			contentType: "application/x-www-form-urlencoded",
-			url: "http://localhost:8080/dict/list",
+			url: "http://localhost:8080/dict/listCount",
 			data: {
 				"catalog": catalog,
 				"state": state
@@ -180,9 +185,8 @@ jQuery(document).ready(function () {
 			xhrFields: {withCredentials: true},
 			success: function (data) {
 				if (data.status == "success") {
-					$("#tbody").html("");
-					g_dictList = data.data;
-					reloadDom();
+					$("#queryCount").html(data.data);
+					queryList(catalog, state);
 				} else {
 					alert("查询失败，原因为" + data.data.errMsg);
 				}
@@ -194,12 +198,37 @@ jQuery(document).ready(function () {
 	});
 });
 
+function queryList(catalog, state) {
+	$.ajax({
+		type: "POST",
+		contentType: "application/x-www-form-urlencoded",
+		url: "http://localhost:8080/dict/list",
+		data: {
+			"catalog": catalog,
+			"state": state
+		},
+		xhrFields: {withCredentials: true},
+		success: function (data) {
+			if (data.status == "success") {
+				$("#tbody").html("");
+				g_dictList = data.data;
+				reloadDom();
+			} else {
+				alert("查询失败，原因为" + data.data.errMsg);
+			}
+		},
+		error: function (data) {
+			alert("查询失败，原因为" + data.responseText);
+		}
+	});
+}
+
 function reloadDom() {
 	for (var i = 0; i < g_dictList.length; i++) {
 		var dictVo = g_dictList[i];
-		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\"1\" name=\"\"></td><td data-id='" + dictVo.id + "' id='itemDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td >" + dictVo.state + "</td>" +
+		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\""+dictVo.id+"\" name=\"\"></td><td data-id='" + dictVo.id + "' id='itemDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td >" + dictVo.state + "</td>" +
 				"<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"data_update('编辑字典','dict-add.html?id=" + dictVo.id + "&catalog=" + dictVo.catalog + "&value=" + dictVo.value + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
-		"<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"system_data_del(this,'1')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
+		"<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"dict_del("+dictVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
 		$("#tbody").append($(dom));
 		/*$("#dictDetail" + dictVo.id).on("click", function (e) {
 			layer_show("字典详情", 'getdict.html?id=" + $(this).data("id") + "&catalog=" + $(this).data("catalog") + "&value=" + $(this).data("value") + "', "600", "600");
@@ -207,11 +236,36 @@ function reloadDom() {
 	}
 }
 
+function data_del() {
+	var list = jQuery(".table tbody input[type=checkbox]:checked").map(function(){
+		return jQuery(this).val();
+	}).get().join(',');
+	dict_del(list);
+}
+
 /*数据字典-删除*/
-function system_data_del(obj,id){
+function dict_del(id){
   layer.confirm('确认要删除吗？',function(index){
-    $(obj).parents("tr").remove();
-    layer.msg('已删除!',{icon:1,time:1000});
+	  $.ajax({
+		  type: "POST",
+		  contentType: "application/x-www-form-urlencoded",
+		  url: "http://localhost:8080/dict/delete",
+		  data: {
+			  "idList": id
+		  },
+		  xhrFields: {withCredentials: true},
+		  success: function (data) {
+			  if (data.status == "success") {
+				  layer.msg('已删除!', {icon: 1, time: 1000});
+				  $("#search").click();
+			  } else {
+				  alert("删除失败，原因为" + data.data.errMsg);
+			  }
+		  },
+		  error: function (data) {
+			  alert("删除失败，原因为" + data.responseText);
+		  }
+	  });
   });
 }
 </script> 

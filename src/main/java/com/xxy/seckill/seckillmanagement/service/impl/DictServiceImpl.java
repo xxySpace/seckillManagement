@@ -12,6 +12,7 @@ import com.xxy.seckill.seckillmanagement.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ public class DictServiceImpl implements DictService {
     private static final Byte STATE_EFFECTIVE = 1;
 
     @Override
+    @Transactional
     public DictModel createDict(DictModel dictModel) throws BusinessException {
         //校验入参
         ValidationResult result = validator.validate(dictModel);
@@ -48,19 +50,30 @@ public class DictServiceImpl implements DictService {
         }
         //转化itemModel -> dataObject，入库
         DictDAO dictDAO = convertDictDAOFromDictModel(dictModel);
-        dictDAOMapper.insertSelective(dictDAO);
+        if (null == dictModel.getId() || 0 == dictModel.getId()) {
+            dictDAOMapper.insertSelective(dictDAO);
+        } else {
+            dictDAOMapper.updateByPrimaryKeySelective(dictDAO);
+        }
         return this.getDictDetail(dictModel);
     }
 
     @Override
     public List<DictModel> listDict(DictModel dictModel) {
-        List<DictDAO> dictDAOList = dictDAOMapper.listDict(dictModel);
+        DictDAO dao = convertDictDAOFromDictModel(dictModel);
+        List<DictDAO> dictDAOList = dictDAOMapper.listDict(dao);
         List<DictModel> dictModelList = dictDAOList.stream().map(dictDAO -> {
             DictModel model = this.convertDictModelFromDictDAO(dictDAO);
             return model;
         }).collect(Collectors.toList());
 
         return dictModelList;
+    }
+
+    @Override
+    public Integer listDictCount(DictModel dictModel) {
+        DictDAO dao = convertDictDAOFromDictModel(dictModel);
+        return dictDAOMapper.listDictCount(dao);
     }
 
     @Override
@@ -74,6 +87,7 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    @Transactional
     public boolean updateDict(DictModel dictModel) {
         DictDAO dictDAO = convertDictDAOFromDictModel(dictModel);
         int affectedRow = dictDAOMapper.updateByPrimaryKeySelective(dictDAO);
@@ -85,10 +99,9 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    public boolean deleteDict(DictModel dictModel) {
-        DictDAOKey dictDAOKey = new DictDAOKey();
-        BeanUtils.copyProperties(dictModel, dictDAOKey);
-        int affectedRow = dictDAOMapper.deleteByPrimaryKey(dictDAOKey);
+    @Transactional
+    public boolean deleteDict(String[] idList) {
+        int affectedRow = dictDAOMapper.deleteDict(idList);
         if (affectedRow > 0) {
             return true;
         } else {

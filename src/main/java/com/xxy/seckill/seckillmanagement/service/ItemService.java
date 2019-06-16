@@ -16,9 +16,9 @@ public interface ItemService {
 
     /**
      * 创建商品
-     *
      * @param itemModel
      * @return
+     * @throws BusinessException
      */
     ItemModel createItem(ItemModel itemModel) throws BusinessException;
 
@@ -43,6 +43,8 @@ public interface ItemService {
      * @return
      */
     ItemModel getItemById(Integer id);
+
+    boolean itemDelete(String[] idList);
 
     /**
      * 库存扣减

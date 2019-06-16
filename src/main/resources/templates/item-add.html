@@ -22,6 +22,7 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-article-add">
         <div class="row cl">
+            <input id="id" name="id" type="hidden" value=""/>
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>商品名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" id="title" name="title">
@@ -87,6 +88,7 @@
     var g_itemVo = {};
     jQuery(document).ready(function () {
         $("#create").on("click", function () {
+            var id = $("#id").val();
             var title = $("#title").val();
             var price = $("#price").val();
             var stock = $("#stock").val();
@@ -117,6 +119,7 @@
                 contentType: "application/x-www-form-urlencoded",
                 url: "http://localhost:8080/item/create",
                 data: {
+                    "id": id,
                     "title": title,
                     "price": price,
                     "stock": stock,
@@ -162,6 +165,7 @@
     });
 
     function reloadDom() {
+        $("#id").val(g_itemVo.id);
         $("#title").val(g_itemVo.title);
         $("#description").val(g_itemVo.description);
         $("#price").val(g_itemVo.price);

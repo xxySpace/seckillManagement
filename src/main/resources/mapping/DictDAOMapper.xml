@@ -36,9 +36,21 @@
       and value = #{value,jdbcType=VARCHAR}
   </select>
 
-  <select id="listDict" resultMap="BaseResultMap">
+  <select id="listDict" parameterType="com.xxy.seckill.seckillmanagement.dataobject.DictDAO" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
+    from code_dict
+    where 1 = 1
+    <if test="catalog != null">
+      and catalog like concat('%', #{catalog,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="state != null">
+      and state = #{state,jdbcType=TINYINT}
+    </if>
+  </select>
+
+  <select id="listDictCount" parameterType="com.xxy.seckill.seckillmanagement.dataobject.DictDAO" resultType="java.lang.Integer">
+    select count(id)
     from code_dict
     where 1 = 1
     <if test="catalog != null">
@@ -59,6 +71,13 @@
     where id = #{id,jdbcType=INTEGER}
       and catalog = #{catalog,jdbcType=VARCHAR}
       and value = #{value,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteDict">
+    delete from code_dict
+    where id in
+    <foreach collection="idList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
   </delete>
   <insert id="insert" parameterType="com.xxy.seckill.seckillmanagement.dataobject.DictDAO" keyProperty="id" useGeneratedKeys="true">
     <!--

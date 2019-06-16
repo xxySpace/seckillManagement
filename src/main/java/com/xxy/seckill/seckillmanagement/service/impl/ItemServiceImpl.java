@@ -12,6 +12,7 @@ import com.xxy.seckill.seckillmanagement.service.model.ItemModel;
 import com.xxy.seckill.seckillmanagement.service.model.PromoModel;
 import com.xxy.seckill.seckillmanagement.validator.ValidationResult;
 import com.xxy.seckill.seckillmanagement.validator.ValidatorImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,14 +56,22 @@ public class ItemServiceImpl implements ItemService {
         }
 
         //转化itemModel -> dataObject，入库
-        ItemDAO itemDAO = convertItemDAOFromItemModel(itemModel);
-        itemDAOMapper.insertSelective(itemDAO);
-        itemModel.setId(itemDAO.getId());
-        ItemStockDAO itemStockDAO = convertItemStockDAOFromItemModel(itemModel);
-        itemStockDAOMapper.insertSelective(itemStockDAO);
-
+        if (null == itemModel.getId() || 0 == itemModel.getId()) {
+            ItemDAO itemDAO = convertItemDAOFromItemModel(itemModel);
+            itemDAOMapper.insertSelective(itemDAO);
+            itemModel.setId(itemDAO.getId());
+            ItemStockDAO itemStockDAO = convertItemStockDAOFromItemModel(itemModel);
+            itemStockDAOMapper.insertSelective(itemStockDAO);
+        } else {
+            ItemDAO itemDAO = convertItemDAOFromItemModel(itemModel);
+            itemModel.setId(itemDAO.getId());
+            ItemStockDAO itemStockDAO = convertItemStockDAOFromItemModel(itemModel);
+            boolean success = this.updateItemById(itemDAO, itemStockDAO);
+            if (!success){
+                throw new BusinessException(EmBusinessError.UPDATE_ERROR);
+            }
+        }
         //返回创建完成的对象
-
         return this.getItemById(itemModel.getId());
     }
 
@@ -100,6 +109,33 @@ public class ItemServiceImpl implements ItemService {
             itemModel.setPromoModel(promoModel);
         }
         return itemModel;
+    }
+
+    @Override
+    @Transactional
+    public boolean itemDelete(String[] idList) {
+        int result1 = itemDAOMapper.deleteItem(idList);
+        if (result1 <= 0){
+            return false;
+        }
+        int result2 = itemStockDAOMapper.itemStockDelete(idList);
+        if (result2 <= 0){
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean updateItemById(ItemDAO itemDAO, ItemStockDAO itemStockDAO) {
+        int result1 = itemDAOMapper.updateByPrimaryKeySelective(itemDAO);
+        if (result1 <= 0){
+            return false;
+        }
+        int result2 = itemStockDAOMapper.updateSelective(itemStockDAO);
+        if (result2 <= 0){
+            return false;
+        }
+        return true;
     }
 
     @Override

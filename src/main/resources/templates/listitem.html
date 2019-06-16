@@ -124,6 +124,7 @@
                     <thead>
                     <tr class="text-c">
                         <th width="25"><input type="checkbox" name="" value=""></th>
+                        <th width="50">商品编号</th>
                         <th width="100">商品名称</th>
                         <th width="200">图片</th>
                         <th width="200">描述</th>
@@ -178,7 +179,7 @@
                 success: function (data) {
                     if (data.status == "success") {
                         $("#queryCount").html(data.data);
-                        querylist(title);
+                        queryList(title);
                     } else {
                         alert("查询失败，原因为" + data.data.errMsg);
                     }
@@ -190,7 +191,7 @@
         });
     });
 
-    function querylist(title) {
+    function queryList(title) {
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
@@ -217,9 +218,9 @@
     function reloadDom() {
         for (var i = 0; i < g_itemList.length; i++) {
             var itemVo = g_itemList[i];
-            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\"1\" name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
+            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+itemVo.id+"' name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.id + "</td><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
                 "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"data_update('编辑商品','item-add.html?id=" + itemVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
-                "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del(this,'1')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
+                "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del("+itemVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
             $("#tbody").append($(dom));
             $("#itemDetail" + itemVo.id).on("click", function (e) {
                 //window.location.href="getitem.html?id="+$(this).data("id");
@@ -229,14 +230,35 @@
     }
 
     function data_del() {
-        alert("批量删除");
+        var list = jQuery(".table tbody input[type=checkbox]:checked").map(function(){
+            return jQuery(this).val();
+        }).get().join(',');
+        item_del(list);
     }
 
     /*商品-删除*/
-    function item_del(obj, id) {
+    function item_del(id) {
         layer.confirm('确认要删除吗？', function (index) {
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
+            $.ajax({
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                url: "http://localhost:8080/item/delete",
+                data: {
+                    "idList": id
+                },
+                xhrFields: {withCredentials: true},
+                success: function (data) {
+                    if (data.status == "success") {
+                        layer.msg('已删除!', {icon: 1, time: 1000});
+                        $("#search").click();
+                    } else {
+                        alert("删除失败，原因为" + data.data.errMsg);
+                    }
+                },
+                error: function (data) {
+                    alert("删除失败，原因为" + data.responseText);
+                }
+            });
         });
     }
 </script>

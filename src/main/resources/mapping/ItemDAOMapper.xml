@@ -63,6 +63,13 @@
     delete from item
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteItem">
+    delete from item
+    where id in
+    <foreach collection="idList" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </delete>
   <insert id="insert" parameterType="com.xxy.seckill.seckillmanagement.dataobject.ItemDAO" keyProperty="id" useGeneratedKeys="true">
     <!--
       WARNING - @mbg.generated

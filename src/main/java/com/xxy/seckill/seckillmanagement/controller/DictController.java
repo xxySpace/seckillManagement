@@ -50,13 +50,15 @@ public class DictController extends BaseController {
      */
     @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    private CommonRetrunType createDict(@RequestParam(name = "catalog") String catalog,
+    private CommonRetrunType createDict(@RequestParam(name = "id") Integer id,
+                                        @RequestParam(name = "catalog") String catalog,
                                         @RequestParam(name = "value") String value,
                                         @RequestParam(name = "name") String name,
                                         @RequestParam(name = "memo") String memo,
                                         @RequestParam(name = "state") Byte state) throws BusinessException {
         //封装service请求用来创建字典
         DictModel dictModel = new DictModel();
+        dictModel.setId(id);
         dictModel.setCatalog(catalog);
         dictModel.setValue(value);
         dictModel.setName(name);
@@ -105,16 +107,25 @@ public class DictController extends BaseController {
         return CommonRetrunType.create(dictVOList);
     }
 
-    @RequestMapping(value = "/delete", method = {RequestMethod.GET})
+    @RequestMapping(value = "/listCount", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    private CommonRetrunType deleteDict(@RequestParam(name = "id") Integer id,
-                                        @RequestParam(name = "catalog") String catalog,
-                                        @RequestParam(name = "value") String value) throws BusinessException {
+    private CommonRetrunType listDictCount(@RequestParam(name = "catalog") String catalog,
+                                           @RequestParam(name = "state") Byte state) {
         DictModel dictModel = new DictModel();
-        dictModel.setId(id);
-        dictModel.setCatalog(catalog);
-        dictModel.setValue(value);
-        boolean success = dictService.deleteDict(dictModel);
+        if (StringUtils.isNotEmpty(catalog)) {
+            dictModel.setCatalog(catalog);
+        }
+        dictModel.setState(state);
+        Integer queryCount = dictService.listDictCount(dictModel);
+
+        return CommonRetrunType.create(queryCount);
+    }
+
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    private CommonRetrunType deleteDict(@RequestParam(name = "idList") String idList) throws BusinessException {
+        String[] id = idList.split(",");
+        boolean success = dictService.deleteDict(id);
         if (!success) {
             throw new BusinessException(EmBusinessError.DELETE_ERROR);
         }

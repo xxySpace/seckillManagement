@@ -19,32 +19,44 @@ public interface DictService {
      * 创建字典
      * @param dictModel
      * @return
+     * @throws BusinessException
      */
     DictModel createDict(DictModel dictModel) throws BusinessException;
 
     /**
      * 字典列表
+     * @param dictModel
      * @return
      */
     List<DictModel> listDict(DictModel dictModel);
 
     /**
+     * 字典列表查询数量
+     * @param dictModel
+     * @return
+     */
+    Integer listDictCount(DictModel dictModel);
+
+    /**
      * 字典详情
+     * @param dictModel
      * @return
      */
     DictModel getDictDetail(DictModel dictModel);
 
     /**
      * 更新字典
+     * @param dictModel
      * @return
      */
     boolean updateDict(DictModel dictModel);
 
     /**
      * 删除字典
+     * @param idList
      * @return
      */
-    boolean deleteDict(DictModel dictModel);
+    boolean deleteDict(String[] idList);
 
     /**
      * 公共方法，获取字典

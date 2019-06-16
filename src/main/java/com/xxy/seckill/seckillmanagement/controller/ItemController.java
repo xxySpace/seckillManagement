@@ -2,6 +2,7 @@ package com.xxy.seckill.seckillmanagement.controller;
 
 import com.xxy.seckill.seckillmanagement.controller.viewobject.ItemVO;
 import com.xxy.seckill.seckillmanagement.error.BusinessException;
+import com.xxy.seckill.seckillmanagement.error.EmBusinessError;
 import com.xxy.seckill.seckillmanagement.response.CommonRetrunType;
 import com.xxy.seckill.seckillmanagement.service.ItemService;
 import com.xxy.seckill.seckillmanagement.service.model.ItemModel;
@@ -47,13 +48,15 @@ public class ItemController extends BaseController {
      */
     @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonRetrunType createItem(@RequestParam(name = "title") String title,
+    public CommonRetrunType createItem(@RequestParam(name = "id") Integer id,
+                                       @RequestParam(name = "title") String title,
                                        @RequestParam(name = "description") String description,
                                        @RequestParam(name = "price") BigDecimal price,
                                        @RequestParam(name = "stock") Integer stock,
                                        @RequestParam(name = "imgUrl") String imgUrl) throws BusinessException {
         //封装service请求用来创建商品
         ItemModel itemModel = new ItemModel();
+        itemModel.setId(id);
         itemModel.setTitle(title);
         itemModel.setDescription(description);
         itemModel.setPrice(price);
@@ -101,6 +104,17 @@ public class ItemController extends BaseController {
     public CommonRetrunType listItemCount(@RequestParam(name = "title") String title) {
         Integer queryCount = itemService.listItemCount(title);
         return CommonRetrunType.create(queryCount);
+    }
+
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonRetrunType itemDelete(@RequestParam(name = "idList") String idList) throws BusinessException {
+        String[] id = idList.split(",");
+        boolean success = itemService.itemDelete(id);
+        if (!success){
+            throw new BusinessException(EmBusinessError.DELETE_ERROR);
+        }
+        return CommonRetrunType.create(null);
     }
 
     private ItemVO convertVOFromModel(ItemModel itemModel) {

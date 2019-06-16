@@ -22,6 +22,7 @@
 <div class="page-container">
     <form action="" method="post" class="form form-horizontal" id="form-article-add">
         <div class="row cl">
+            <input id="id" name="id" type="hidden" value=""/>
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>字典类别：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" id="catalog" name="catalog">
@@ -88,6 +89,7 @@
     var g_dictVo = {};
     jQuery(document).ready(function () {
         $("#create").on("click", function () {
+            var id = $("#id").val();
             var catalog = $("#catalog").val();
             var value = $("#value").val();
             var name = $("#name").val();
@@ -120,6 +122,7 @@
                 contentType: "application/x-www-form-urlencoded",
                 url: "http://localhost:8080/dict/create",
                 data: {
+                    "id": id,
                     "catalog": catalog,
                     "value": value,
                     "name": name,
@@ -170,6 +173,7 @@
     });
 
     function reloadDom() {
+        $("#id").val(g_dictVo.id);
         $("#catalog").val(g_dictVo.catalog);
         $("#value").val(g_dictVo.value);
         $("#name").val(g_dictVo.name);
