@@ -125,7 +125,7 @@
 				<span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
 			</div>
 			<div class="mt-20">
-				<table class="table table-border table-bordered table-hover table-bg">
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
 					<thead>
 						<tr class="text-c">
 							<th width="25"><input type="checkbox" name="" value=""></th>
@@ -158,17 +158,9 @@
 <script type="text/javascript" src="../static/h-ui/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript">
-$('.table-sort').dataTable({
-	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
-	"bStateSave": true,//状态保存
-	"aoColumnDefs": [
-	  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-	  {"orderable":false,"aTargets":[0,5]}// 制定列不参与排序
-	]
-});
-
 //定义全局商品数组信息
 var g_dictList = [];
+var loadPage = false;
 jQuery(document).ready(function () {
 	$("#search").on("click", function () {
 		var catalog = $("#catalog").val();
@@ -233,6 +225,17 @@ function reloadDom() {
 		/*$("#dictDetail" + dictVo.id).on("click", function (e) {
 			layer_show("字典详情", 'getdict.html?id=" + $(this).data("id") + "&catalog=" + $(this).data("catalog") + "&value=" + $(this).data("value") + "', "600", "600");
 		});*/
+	}
+	if (!loadPage){
+		$('.table-sort').dataTable({
+			"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+			"bStateSave": true,//状态保存
+			"aoColumnDefs": [
+				//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+				{"orderable":false,"aTargets":[0,1,2,3,4,5,6,7]}// 制定列不参与排序
+			]
+		});
+		loadPage = true;
 	}
 }
 

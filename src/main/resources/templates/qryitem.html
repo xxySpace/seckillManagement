@@ -115,7 +115,7 @@
                 </button>
             </div>
             <div class="mt-20">
-                <table class="table table-border table-bordered table-hover table-bg ">
+                <table class="table table-border table-bordered table-hover table-bg table-sort">
                     <thead>
                     <tr class="text-c">
                         <th width="100">商品名称</th>
@@ -146,17 +146,9 @@
 <script type="text/javascript" src="../static/h-ui/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript"  th:inline="none">
-    //h-ui框架不好处理分页，所以为了页面的美观性暂时屏蔽分页
-    /*$('.table-sort').dataTable({
-        "aaSorting": [[ 1, "desc" ]],//默认第几个排序
-        "bStateSave": true,//状态保存
-        "aoColumnDefs": [
-            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-            {"orderable":false,"aTargets":[0,1,2,3,4,5,6]}// 制定列不参与排序
-        ]
-    });*/
     //定义全局商品数组信息
     var g_itemList = [];
+    var loadPage = false;
     jQuery(document).ready(function () {
         $("#search").on("click", function () {
             var title = $("#title").val();
@@ -193,6 +185,17 @@
                 //window.location.href="getitem.html?id="+$(this).data("id");
                 layer_show("商品详情", "getitem.html?id=" + $(this).data("id") + "&type=order", "600", "600");
             });
+        }
+        if (!loadPage){
+            $('.table-sort').dataTable({
+                "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+                "bStateSave": true,//状态保存
+                "aoColumnDefs": [
+                    //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                    {"orderable":false,"aTargets":[0,1,2,3,4]}// 制定列不参与排序
+                ]
+            });
+            loadPage = true;
         }
     }
 </script>
