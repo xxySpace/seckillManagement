@@ -53,7 +53,10 @@ public class DictServiceImpl implements DictService {
         if (null == dictModel.getId() || 0 == dictModel.getId()) {
             dictDAOMapper.insertSelective(dictDAO);
         } else {
-            dictDAOMapper.updateByPrimaryKeySelective(dictDAO);
+            boolean success = this.updateDict(dictModel);
+            if (!success){
+                throw new BusinessException(EmBusinessError.UPDATE_ERROR);
+            }
         }
         return this.getDictDetail(dictModel);
     }

@@ -1,6 +1,9 @@
 package com.xxy.seckill.seckillmanagement.service;
 
+import com.xxy.seckill.seckillmanagement.error.BusinessException;
 import com.xxy.seckill.seckillmanagement.service.model.PromoModel;
+
+import java.util.List;
 
 /**
  * @ClassName: PromoService
@@ -16,4 +19,46 @@ public interface PromoService {
      * @return
      */
     PromoModel getPromoByItemId(Integer itemId);
+
+    /**
+     * 创建活动
+     * @param promoModel
+     * @return
+     * @throws BusinessException
+     */
+    PromoModel createPromo(PromoModel promoModel) throws BusinessException;
+
+    /**
+     * 查询活动列表
+     * @param promoModel
+     * @return
+     */
+    List<PromoModel> listPromo(PromoModel promoModel);
+
+    /**
+     * 查询活动数量
+     * @param promoModel
+     * @return
+     */
+    Integer listPromoCount(PromoModel promoModel);
+
+    /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    PromoModel getPromoById(Integer id);
+
+    /**
+     * 删除活动
+     * @param idList
+     * @return
+     */
+    boolean promoDelete(String[] idList);
+
+    /**
+     * 更新活动
+     * @return
+     */
+    boolean promoUpdate(PromoModel promoModel);
 }

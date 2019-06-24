@@ -42,7 +42,7 @@ public interface ItemService {
      * @param id
      * @return
      */
-    ItemModel getItemById(Integer id);
+    ItemModel getItemById(Integer id) throws BusinessException;
 
     boolean itemDelete(String[] idList);
 

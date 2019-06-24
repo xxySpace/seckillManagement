@@ -71,6 +71,7 @@
 			<dd id="itemmng" style="display: none;">
 				<ul>
 					<li><a href="listitem.html" title="商品管理">商品管理</a></li>
+					<li><a href="listpromo.html" title="活动管理">活动管理</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -120,7 +121,7 @@
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
 					<a href="javascript:;" onclick="data_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-					<a href="javascript:;" class="btn btn-primary radius" id="dict_add" name="" onclick="data_update('新增字典','dict-add.html','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</a>
+					<a href="javascript:;" class="btn btn-primary radius" id="dict_add" name="" onclick="layer_show('新增字典','dict-add.html','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</a>
 			    </span>
 				<span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
 			</div>
@@ -218,8 +219,8 @@ function queryList(catalog, state) {
 function reloadDom() {
 	for (var i = 0; i < g_dictList.length; i++) {
 		var dictVo = g_dictList[i];
-		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\""+dictVo.id+"\" name=\"\"></td><td data-id='" + dictVo.id + "' id='itemDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td >" + dictVo.state + "</td>" +
-				"<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"data_update('编辑字典','dict-add.html?id=" + dictVo.id + "&catalog=" + dictVo.catalog + "&value=" + dictVo.value + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\""+dictVo.id+"\" name=\"\"></td><td data-id='" + dictVo.id + "' id='dictDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td >" + dictVo.state + "</td>" +
+				"<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑字典','dict-add.html?id=" + dictVo.id + "&catalog=" + dictVo.catalog + "&value=" + dictVo.value + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
 		"<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"dict_del("+dictVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
 		$("#tbody").append($(dom));
 		/*$("#dictDetail" + dictVo.id).on("click", function (e) {
@@ -228,11 +229,11 @@ function reloadDom() {
 	}
 	if (!loadPage){
 		$('.table-sort').dataTable({
-			"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+			"aaSorting": [[ 1, "asc" ]],//默认第几个排序
 			"bStateSave": true,//状态保存
 			"aoColumnDefs": [
 				//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-				{"orderable":false,"aTargets":[0,1,2,3,4,5,6,7]}// 制定列不参与排序
+				{"orderable":false,"aTargets":[0,2,3,4,5,6,7]}// 制定列不参与排序
 			]
 		});
 		loadPage = true;

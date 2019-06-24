@@ -77,14 +77,3 @@ function getParam(name) {
     var result = match.split(",");
     return decodeURIComponent(result[1]);
 }
-
-/**
- * 公共弹出窗（新增和修改）
- * @param title 弹框标题
- * @param url 弹框地址+参数
- * @param w 弹框宽
- * @param h 弹框高
- */
-function data_update(title, url, w, h) {
-    layer_show(title, url, w, h);
-}

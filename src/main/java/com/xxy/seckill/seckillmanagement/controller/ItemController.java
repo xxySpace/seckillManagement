@@ -76,11 +76,9 @@ public class ItemController extends BaseController {
      */
     @RequestMapping(value = "/get", method = {RequestMethod.GET})
     @ResponseBody
-    public CommonRetrunType getItem(@RequestParam(name = "id") Integer id) {
+    public CommonRetrunType getItem(@RequestParam(name = "id") Integer id) throws BusinessException {
         ItemModel itemModel = itemService.getItemById(id);
-
         ItemVO itemVO = convertVOFromModel(itemModel);
-
         return CommonRetrunType.create(itemVO);
     }
 
@@ -88,8 +86,6 @@ public class ItemController extends BaseController {
     @ResponseBody
     public CommonRetrunType listItem(@RequestParam(name = "title") String title) {
         List<ItemModel> itemModelList = itemService.listItem(title);
-        Integer queryCount = itemService.listItemCount(title);
-        httpServletRequest.setAttribute("queryCount", queryCount);
 
         //使用Stream api将list内的itemModel转化为itemVo;
         List<ItemVO> itemVOList = itemModelList.stream().map(itemModel -> {

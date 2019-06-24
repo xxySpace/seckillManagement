@@ -2,7 +2,11 @@ package com.xxy.seckill.seckillmanagement.service.model;
 
 import org.joda.time.DateTime;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @ClassName: PromoModel
@@ -22,6 +26,7 @@ public class PromoModel {
     /**
      * 秒杀活动名称
      */
+    @NotBlank(message = "活动名称不能为空")
     private String promoName;
 
     /**
@@ -37,12 +42,36 @@ public class PromoModel {
     /**
      * 秒杀活动的适用商品
      */
+    @NotNull(message = "活动商品编码不能为空")
     private Integer itemId;
 
     /**
      * 秒杀活动的商品单价
      */
+    @NotNull(message = "商品活动价格不能为空")
+    @Min(value = 0, message = "商品活动价格必须大于0")
     private BigDecimal promoItemPrice;
+
+    /** 查询条件*/
+
+    /**
+     * 秒杀活动的开始时间区间
+     */
+    private Date startDateBegin;
+
+    private Date startDateEnd;
+
+    /**
+     * 秒杀活动的结束时间区间
+     */
+    private Date endDateBegin;
+
+    private Date endDateEnd;
+
+    /**
+     * 商品名称
+     */
+    private String itemName;
 
     public Integer getId() {
         return id;
@@ -98,5 +127,45 @@ public class PromoModel {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Date getStartDateBegin() {
+        return startDateBegin;
+    }
+
+    public void setStartDateBegin(Date startDateBegin) {
+        this.startDateBegin = startDateBegin;
+    }
+
+    public Date getStartDateEnd() {
+        return startDateEnd;
+    }
+
+    public void setStartDateEnd(Date startDateEnd) {
+        this.startDateEnd = startDateEnd;
+    }
+
+    public Date getEndDateBegin() {
+        return endDateBegin;
+    }
+
+    public void setEndDateBegin(Date endDateBegin) {
+        this.endDateBegin = endDateBegin;
+    }
+
+    public Date getEndDateEnd() {
+        return endDateEnd;
+    }
+
+    public void setEndDateEnd(Date endDateEnd) {
+        this.endDateEnd = endDateEnd;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }

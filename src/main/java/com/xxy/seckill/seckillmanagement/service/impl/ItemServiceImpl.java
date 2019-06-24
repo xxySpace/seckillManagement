@@ -12,7 +12,6 @@ import com.xxy.seckill.seckillmanagement.service.model.ItemModel;
 import com.xxy.seckill.seckillmanagement.service.model.PromoModel;
 import com.xxy.seckill.seckillmanagement.validator.ValidationResult;
 import com.xxy.seckill.seckillmanagement.validator.ValidatorImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemModel getItemById(Integer id) {
+    public ItemModel getItemById(Integer id) throws BusinessException {
         ItemDAO itemDAO = itemDAOMapper.selectByPrimaryKey(id);
         if (null == itemDAO) {
             return null;
@@ -103,8 +102,13 @@ public class ItemServiceImpl implements ItemService {
         //将dataObject -> model
         ItemModel itemModel = convertModelFromDataObject(itemDAO, itemStockDAO);
 
+        PromoModel promoModel = null;
         //获取活动商品信息
-        PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
+        try {
+            promoModel = promoService.getPromoByItemId(itemModel.getId());
+        }catch (Exception e){
+            throw new BusinessException(EmBusinessError.SELECT_ERROR, "查询商品信息出错，请检查活动商品的唯一性");
+        }
         if (null != promoModel && PROMO_FINISH != promoModel.getStatus().intValue()) {
             itemModel.setPromoModel(promoModel);
         }

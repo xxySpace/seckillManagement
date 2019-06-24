@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" type="text/css" href="../static/loadarticle.css" />
 
-    <title>商品列表</title>
+    <title>活动列表</title>
 </head>
 <body onload="getUserInfo()">
 
@@ -99,36 +99,46 @@
 </aside>
 <section class="Hui-article-box">
     <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 营销管理 <span
-            class="c-gray en">&gt;</span> 商品管理<a class="btn btn-success radius r"
+            class="c-gray en">&gt;</span> 活动管理<a class="btn btn-success radius r"
                                                  style="line-height:1.6em;margin-top:3px"
                                                  href="javascript:location.replace(location.href);" title="刷新"><i
             class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="article">
         <article class="cl pd-20">
             <div class="text-c">
-                <input type="text" class="input-text" style="width:250px" placeholder="输入商品名称" id="title" name="title">
+                活动开始时间：
+                <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'startDateBegin\')||\'2099-12-31 23:59:59\'}', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="startDateBegin" class="input-text Wdate" style="width: 170px">
+                -
+                <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startDateEnd\')}',maxDate:'2099-12-31 23:59:59', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="startDateEnd" class="input-text Wdate" style="width: 170px">
+                活动结束时间：
+                <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDateBegin\')||\'2099-12-31 23:59:59\'}', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="endDateBegin" class="input-text Wdate" style="width: 170px">
+                -
+                <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'endDateEnd\')}',maxDate:'2099-12-31 23:59:59', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="endDateEnd" class="input-text Wdate" style="width: 170px">
+                <input type="text" class="input-text" style="width:250px" placeholder="输入活动名称" id="promoName" name="promoName">
+                <input type="text" class="input-text" style="width:250px" placeholder="输入商品名称" id="itemName" name="itemName">
                 <button type="submit" class="btn btn-success radius" id="search" name="search"><i class="Hui-iconfont">&#xe665;</i>
-                    搜商品
+                    搜活动
                 </button>
             </div>
+
             <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"><a href="javascript:;" onclick="data_del()"
                                                                        class="btn btn-danger radius"><i
                     class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;"
-                                                                  onclick="layer_show('创建商品','item-add.html','','500')"
+                                                                  onclick="layer_show('创建活动','promo-add.html','450','400')"
                                                                   class="btn btn-primary radius"><i
-                    class="Hui-iconfont">&#xe600;</i> 创建商品</a></span> <span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
+                    class="Hui-iconfont">&#xe600;</i> 创建活动</a></span> <span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
             </div>
             <div class="mt-20">
                 <table class="table table-border table-bordered table-hover table-bg table-sort">
                     <thead>
                     <tr class="text-c">
                         <th width="25"><input type="checkbox" name="" value=""></th>
-                        <th width="50">商品编号</th>
-                        <th width="100">商品名称</th>
-                        <th width="200">图片</th>
-                        <th width="200">描述</th>
-                        <th width="50">价格</th>
-                        <th width="50">销量</th>
+                        <th width="50">活动编号</th>
+                        <th width="100">活动名称</th>
+                        <th width="200">开始日期</th>
+                        <th width="200">结束日期</th>
+                        <th width="50">活动商品</th>
+                        <th width="50">活动价格</th>
                         <th width="100">操作</th>
                     </tr>
                     </thead>
@@ -154,23 +164,33 @@
 <script type="text/javascript" src="../static/common.js"></script>
 <script type="text/javascript">
     //定义全局商品数组信息
-    var g_itemList = [];
+    var g_promoList = [];
     var loadPage = false;
     jQuery(document).ready(function () {
         $("#search").on("click", function () {
-            var title = $("#title").val();
+            var promoName = $("#promoName").val();
+            var startDateBegin = $("#startDateBegin").val();
+            var startDateEnd = $("#startDateEnd").val();
+            var endDateBegin = $("#endDateBegin").val();
+            var endDateEnd = $("#endDateEnd").val();
+            var itemName = $("#itemName").val();
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/item/listCount",
+                url: "http://localhost:8080/promo/listCount",
                 data: {
-                    "title": title
+                    "promoName": promoName,
+                    "startDateBegin": startDateBegin,
+                    "startDateEnd": startDateEnd,
+                    "endDateBegin": endDateBegin,
+                    "endDateEnd": endDateEnd,
+                    "itemName": itemName
                 },
                 xhrFields: {withCredentials: true},
                 success: function (data) {
                     if (data.status == "success") {
                         $("#queryCount").html(data.data);
-                        queryList(title);
+                        queryList(promoName, startDateBegin, startDateEnd, endDateBegin, endDateEnd, itemName);
                     } else {
                         alert("查询失败，原因为" + data.data.errMsg);
                     }
@@ -182,19 +202,24 @@
         });
     });
 
-    function queryList(title) {
+    function queryList(promoName, startDateBegin, startDateEnd, endDateBegin, endDateEnd, itemName) {
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            url: "http://localhost:8080/item/list",
+            url: "http://localhost:8080/promo/list",
             data: {
-                "title": title
+                "promoName": promoName,
+                "startDateBegin": startDateBegin,
+                "startDateEnd": startDateEnd,
+                "endDateBegin": endDateBegin,
+                "endDateEnd": endDateEnd,
+                "itemName": itemName
             },
             xhrFields: {withCredentials: true},
             success: function (data) {
                 if (data.status == "success") {
                     $("#tbody").html("");
-                    g_itemList = data.data;
+                    g_promoList = data.data;
                     reloadDom();
                 } else {
                     alert("查询失败，原因为" + data.data.errMsg);
@@ -207,16 +232,12 @@
     }
 
     function reloadDom() {
-        for (var i = 0; i < g_itemList.length; i++) {
-            var itemVo = g_itemList[i];
-            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+itemVo.id+"' name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.id + "</td><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
-                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑商品','item-add.html?id=" + itemVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
-                "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del("+itemVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
+        for (var i = 0; i < g_promoList.length; i++) {
+            var promoVo = g_promoList[i];
+            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+promoVo.id+"' name=\"\"></td><td data-id='" + promoVo.id + "' id='promoDetail" + promoVo.id + "'>" + promoVo.id + "</td><td>" + promoVo.promoName + "</td><td>" + promoVo.startDate + "</td><td>" + promoVo.endDate + "</td><td>" + promoVo.itemName + "</td><td>" + promoVo.promoItemPrice + "</td>" +
+                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑活动','promo-add.html?id=" + promoVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+                "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"promo_del("+promoVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
             $("#tbody").append($(dom));
-            $("#itemDetail" + itemVo.id).on("click", function (e) {
-                //window.location.href="getitem.html?id="+$(this).data("id");
-                layer_show("商品详情", "getitem.html?id=" + $(this).data("id"), "600", "600");
-            });
         }
         if (!loadPage){
             $('.table-sort').dataTable({
@@ -224,7 +245,7 @@
                 "bStateSave": true,//状态保存
                 "aoColumnDefs": [
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                    {"orderable":false,"aTargets":[0,2,3,4,7]}// 制定列不参与排序
+                    {"orderable":false,"aTargets":[0,2,5,7]}// 制定列不参与排序
                 ]
             });
             loadPage = true;
@@ -235,16 +256,16 @@
         var list = jQuery(".table tbody input[type=checkbox]:checked").map(function(){
             return jQuery(this).val();
         }).get().join(',');
-        item_del(list);
+        promo_del(list);
     }
 
-    /*商品-删除*/
-    function item_del(id) {
+    /*活动-删除*/
+    function promo_del(id) {
         layer.confirm('确认要删除吗？', function (index) {
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/item/delete",
+                url: "http://localhost:8080/promo/delete",
                 data: {
                     "idList": id
                 },
