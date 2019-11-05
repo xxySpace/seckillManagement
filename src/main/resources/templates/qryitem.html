@@ -100,7 +100,6 @@
     </div>
 </aside>
 <div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
-
 <section class="Hui-article-box">
     <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 营销活动 <span
             class="c-gray en">&gt;</span> 商品秒杀<a class="btn btn-success radius r"
@@ -180,7 +179,7 @@
     function reloadDom() {
         for (var i = 0; i < g_itemList.length; i++) {
             var itemVo = g_itemList[i];
-            var dom = "<tr class='text-c' data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td></tr>"
+            var dom = "<tr class='text-c' data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "' height='120'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td></tr>"
             $("#tbody").append($(dom));
             $("#itemDetail" + itemVo.id).on("click", function (e) {
                 //window.location.href="getitem.html?id="+$(this).data("id");

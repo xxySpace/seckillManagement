@@ -97,6 +97,7 @@
         </dl>
     </div>
 </aside>
+<div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
 <section class="Hui-article-box">
     <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 营销管理 <span
             class="c-gray en">&gt;</span> 商品管理<a class="btn btn-success radius r"
@@ -209,7 +210,7 @@
     function reloadDom() {
         for (var i = 0; i < g_itemList.length; i++) {
             var itemVo = g_itemList[i];
-            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+itemVo.id+"' name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.id + "</td><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
+            var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+itemVo.id+"' name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.id + "</td><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "' height='120'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
                 "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑商品','item-add.html?id=" + itemVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
                 "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del("+itemVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
             $("#tbody").append($(dom));
