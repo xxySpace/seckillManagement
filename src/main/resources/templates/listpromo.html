@@ -60,7 +60,7 @@
             <dt ><i class="Hui-iconfont">&#xe620;</i> 营销活动<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="itemactivity" style="display: none;">
                 <ul>
-                    <li><a href="qryitem.html" title="商品秒杀">商品秒杀</a></li>
+                    <li><a href="/item/qryItem" title="商品秒杀">商品秒杀</a></li>
                 </ul>
             </dd>
         </dl>
@@ -68,8 +68,8 @@
             <dt ><i class="Hui-iconfont">&#xe620;</i> 营销管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="itemmng" style="display: block;">
                 <ul>
-                    <li><a href="listitem.html" title="商品管理">商品管理</a></li>
-                    <li><a href="listpromo.html" title="活动管理">活动管理</a></li>
+                    <li><a href="/item/listItem" title="商品管理">商品管理</a></li>
+                    <li><a href="/promo/listPromo" title="活动管理">活动管理</a></li>
                 </ul>
             </dd>
         </dl>
@@ -77,9 +77,9 @@
             <dt ><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="rolemng" style="display: none;">
                 <ul>
-                    <li><a href="admin-role.html" title="角色管理">角色管理</a></li>
-                    <li><a href="admin-permission.html" title="权限管理">权限管理</a></li>
-                    <li><a href="admin-list.html" title="管理员列表">管理员列表</a></li>
+                    <li><a href="/admin/admin-role" title="角色管理">角色管理</a></li>
+                    <li><a href="/admin/admin-permission" title="权限管理">权限管理</a></li>
+                    <li><a href="/admin/admin-list" title="管理员列表">管理员列表</a></li>
                 </ul>
             </dd>
         </dl>
@@ -87,11 +87,11 @@
             <dt ><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="systemmng" style="display: none;">
                 <ul>
-                    <li><a href="system-base.html" title="系统设置">系统设置</a></li>
-                    <li><a href="system-category.html" title="栏目管理">栏目管理</a></li>
-                    <li><a href="system-data.html" title="数据字典">数据字典</a></li>
-                    <li><a href="system-shielding.html" title="屏蔽词">屏蔽词</a></li>
-                    <li><a href="system-log.html" title="系统日志">系统日志</a></li>
+                    <li><a href="/system/system-base" title="系统设置">系统设置</a></li>
+                    <li><a href="/system/system-category" title="栏目管理">栏目管理</a></li>
+                    <li><a href="/system/system-data" title="数据字典">数据字典</a></li>
+                    <li><a href="/system/system-shielding" title="屏蔽词">屏蔽词</a></li>
+                    <li><a href="/system/system-log" title="系统日志">系统日志</a></li>
                 </ul>
             </dd>
         </dl>
@@ -125,7 +125,7 @@
             <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"><a href="javascript:;" onclick="data_del()"
                                                                        class="btn btn-danger radius"><i
                     class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;"
-                                                                  onclick="layer_show('创建活动','promo-add.html','450','400')"
+                                                                  onclick="layer_show('创建活动','/promo/promoAdd','450','400')"
                                                                   class="btn btn-primary radius"><i
                     class="Hui-iconfont">&#xe600;</i> 创建活动</a></span> <span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
             </div>
@@ -136,9 +136,9 @@
                         <th width="25"><input type="checkbox" name="" value=""></th>
                         <th width="50">活动编号</th>
                         <th width="100">活动名称</th>
-                        <th width="200">开始日期</th>
-                        <th width="200">结束日期</th>
-                        <th width="50">活动商品</th>
+                        <th width="100">开始日期</th>
+                        <th width="100">结束日期</th>
+                        <th width="100">活动商品</th>
                         <th width="50">活动价格</th>
                         <th width="100">操作</th>
                     </tr>
@@ -178,7 +178,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/promo/listCount",
+                url: "/promo/listCount",
                 data: {
                     "promoName": promoName,
                     "startDateBegin": startDateBegin,
@@ -207,7 +207,7 @@
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            url: "http://localhost:8080/promo/list",
+            url: "/promo/list",
             data: {
                 "promoName": promoName,
                 "startDateBegin": startDateBegin,
@@ -236,13 +236,12 @@
         for (var i = 0; i < g_promoList.length; i++) {
             var promoVo = g_promoList[i];
             var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+promoVo.id+"' name=\"\"></td><td data-id='" + promoVo.id + "' id='promoDetail" + promoVo.id + "'>" + promoVo.id + "</td><td>" + promoVo.promoName + "</td><td>" + promoVo.startDate + "</td><td>" + promoVo.endDate + "</td><td>" + promoVo.itemName + "</td><td>" + promoVo.promoItemPrice + "</td>" +
-                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑活动','promo-add.html?id=" + promoVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑活动','/promo/promoAdd?id=" + promoVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
                 "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"promo_del("+promoVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
             $("#tbody").append($(dom));
         }
         if (!loadPage){
             $('.table-sort').dataTable({
-                "aaSorting": [[ 1, "asc" ]],//默认第几个排序
                 "bStateSave": true,//状态保存
                 "aoColumnDefs": [
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
@@ -266,7 +265,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/promo/delete",
+                url: "/promo/delete",
                 data: {
                     "idList": id
                 },

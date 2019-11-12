@@ -29,7 +29,7 @@
 <!--<div class="header"></div>-->
 <div class="loginWraper">
     <div id="loginform" class="loginBox">
-        <form class="form form-horizontal" action="register.html" method="post">
+        <form class="form form-horizontal" action="/login/register" method="post">
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">手机号：</i></label>
                 <div class="formControls col-xs-8 col-sm-9">
@@ -106,7 +106,7 @@
             $.ajax({
                type:"POST",
                contentType:"application/x-www-form-urlencoded",
-               url:"http://localhost:8080/user/getotp",
+               url:"/user/getotp",
                data:{
                    "telphone":$("#telphone").val(),
                },
@@ -159,7 +159,7 @@
             $.ajax({
                 type:"POST",
                 contentType:"application/x-www-form-urlencoded",
-                url:"http://localhost:8080/user/register",
+                url:"/user/register",
                 data:{
                     "telphone":$("#telphone").val(),
                     "otpCode":otpCode,
@@ -182,6 +182,10 @@
             });
             return false;
         });
+        $("#cancel").on("click",function(){
+            window.parent.location.href = "/login";//跳转登录页面
+        });
+
     });
 
 </script>

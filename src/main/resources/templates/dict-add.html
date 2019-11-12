@@ -120,7 +120,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/dict/create",
+                url: "/dict/create",
                 data: {
                     "id": id,
                     "catalog": catalog,
@@ -149,7 +149,7 @@
             //获取商品详情
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/dict/get",
+                url: "/dict/get",
                 data: {
                     "id": getParam("id"),
                     "catalog": getParam("catalog"),

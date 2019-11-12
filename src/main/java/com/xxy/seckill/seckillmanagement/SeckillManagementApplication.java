@@ -4,8 +4,10 @@ import com.xxy.seckill.seckillmanagement.dao.UserDAOMapper;
 import com.xxy.seckill.seckillmanagement.dataobject.UserDAO;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
@@ -16,21 +18,26 @@ import javax.xml.ws.Action;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @SpringBootApplication(scanBasePackages = {"com.xxy.seckill.seckillmanagement"})
 @RestController
 @MapperScan("com.xxy.seckill.seckillmanagement.dao")
 public class SeckillManagementApplication {
-
     @Autowired
     private UserDAOMapper userDAOMapper;
 
+    private static String accessType;
+
+    private static String accessHost;
+
+    private static String port;
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(SeckillManagementApplication.class, args);
-
-        ClassPathResource resource = new ClassPathResource("templates" + File.separator + "login.html");
-        String path = resource.getFile().getPath();
-        browse(path);
+        String loginAddress = getAddress() + "/login";
+        browse(loginAddress);
     }
 
     @RequestMapping("/")
@@ -45,6 +52,7 @@ public class SeckillManagementApplication {
 
     /**
      * 使用默认浏览器打开url
+     *
      * @param url 打开文件的路径
      * @throws Exception
      */
@@ -79,4 +87,25 @@ public class SeckillManagementApplication {
         }
     }
 
+    private static String getAddress() throws UnknownHostException {
+        InetAddress address = InetAddress.getLocalHost();
+        String host = accessHost == null ? address.getHostAddress() : accessHost;
+        String path = accessType + host + ":" + port;
+        return path;
+    }
+
+    @Value("${server.port}")
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    @Value("${access.type}")
+    public void setAccessType(String accessType) {
+        this.accessType = accessType;
+    }
+
+    @Value("${access.host}")
+    public void setAccessHost(String accessHost) {
+        this.accessHost = accessHost;
+    }
 }

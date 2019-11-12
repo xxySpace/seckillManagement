@@ -12,8 +12,10 @@ import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -155,4 +157,15 @@ public class PromoController extends BaseController {
         return promoVO;
     }
 
+    @RequestMapping("/listPromo")
+    public String listPromo(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "listpromo";
+    }
+
+    @RequestMapping("/promoAdd")
+    public String promoAdd(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "promo-add";
+    }
 }

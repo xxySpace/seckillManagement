@@ -117,7 +117,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/item/create",
+                url: "/item/create",
                 data: {
                     "id": id,
                     "title": title,
@@ -144,7 +144,7 @@
             //获取字典详情
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/item/get",
+                url: "/item/get",
                 data: {
                     "id": getParam("id")
                 },

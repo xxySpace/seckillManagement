@@ -65,7 +65,7 @@
 			<dt ><i class="Hui-iconfont">&#xe620;</i> 营销活动<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="itemactivity" style="display: none;">
 				<ul>
-					<li><a href="qryitem.html" title="商品秒杀">商品秒杀</a></li>
+					<li><a href="/item/qryItem" title="商品秒杀">商品秒杀</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -73,8 +73,8 @@
 			<dt ><i class="Hui-iconfont">&#xe620;</i> 营销管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="itemmng" style="display: none;">
 				<ul>
-					<li><a href="listitem.html" title="商品管理">商品管理</a></li>
-					<li><a href="listpromo.html" title="活动管理">活动管理</a></li>
+					<li><a href="/item/listItem" title="商品管理">商品管理</a></li>
+					<li><a href="/promo/listPromo" title="活动管理">活动管理</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -82,9 +82,9 @@
 			<dt ><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="rolemng" style="display: block;">
 				<ul>
-					<li><a href="admin-role.html" title="角色管理">角色管理</a></li>
-					<li><a href="admin-permission.html" title="权限管理">权限管理</a></li>
-					<li><a href="admin-list.html" title="管理员列表">管理员列表</a></li>
+					<li><a href="/admin/admin-role" title="角色管理">角色管理</a></li>
+					<li><a href="/admin/admin-permission" title="权限管理">权限管理</a></li>
+					<li><a href="/admin/admin-list" title="管理员列表">管理员列表</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -92,11 +92,11 @@
 			<dt ><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="systemmng" style="display: none;">
 				<ul>
-					<li><a href="system-base.html" title="系统设置">系统设置</a></li>
-					<li><a href="system-category.html" title="栏目管理">栏目管理</a></li>
-					<li><a href="system-data.html" title="数据字典">数据字典</a></li>
-					<li><a href="system-shielding.html" title="屏蔽词">屏蔽词</a></li>
-					<li><a href="system-log.html" title="系统日志">系统日志</a></li>
+					<li><a href="/system/system-base" title="系统设置">系统设置</a></li>
+					<li><a href="/system/system-category" title="栏目管理">栏目管理</a></li>
+					<li><a href="/system/system-data" title="数据字典">数据字典</a></li>
+					<li><a href="/system/system-shielding" title="屏蔽词">屏蔽词</a></li>
+					<li><a href="/system/system-log" title="系统日志">系统日志</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -109,7 +109,7 @@
 	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 角色管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 	<div class="Hui-article">
 		<article class="cl pd-20">
-			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" href="javascript:;" onclick="admin_role_add('添加角色','admin-role-add.html','800')"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a> </span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" href="javascript:;" onclick="admin_role_add('添加角色','/admin/adminRoleAdd','800')"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a> </span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
 			<div class="mt-10">
 			<table class="table table-border table-bordered table-hover table-bg">
 				<thead>
@@ -132,7 +132,7 @@
 						<td>超级管理员</td>
 						<td><a href="#">admin</a></td>
 						<td>拥有至高无上的权利</td>
-						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','admin-role-add.html','1')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','/admin/adminRoleAdd','1')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 					</tr>
 					<tr class="text-c">
 						<td><input type="checkbox" value="" name=""></td>
@@ -140,7 +140,7 @@
 						<td>总编</td>
 						<td><a href="#">张三</a></td>
 						<td>具有添加、审核、发布、删除内容的权限</td>
-						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','admin-role-add.html','2')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','/admin/adminRoleAdd','2')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 					</tr>
 					<tr class="text-c">
 						<td><input type="checkbox" value="" name=""></td>
@@ -148,7 +148,7 @@
 						<td>栏目主辑</td>
 						<td><a href="#">李四</a>，<a href="#">王五</a></td>
 						<td>只对所在栏目具有添加、审核、发布、删除内容的权限</td>
-						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','admin-role-add.html','3')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','/admin/adminRoleAdd','3')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 					</tr>
 					<tr class="text-c">
 						<td><input type="checkbox" value="" name=""></td>
@@ -156,7 +156,7 @@
 						<td>栏目编辑</td>
 						<td><a href="#">赵六</a>，<a href="#">钱七</a></td>
 						<td>只对所在栏目具有添加、删除草稿等权利。</td>
-						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','admin-role-add.html','4')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','/admin/adminRoleAdd','4')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 					</tr>
 				</tbody>
 			</table>

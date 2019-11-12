@@ -31,13 +31,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开始时间：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'startDate\')||\'2099-12-31 23:59:59\'}', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="startDate" class="input-text Wdate" style="width:auto;">
+                <input type="text" onfocus="WdatePicker({maxDate:'#F{\'2099-12-31 23:59:59\'}', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="startDate" class="input-text Wdate" style="width:auto;">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>结束时间：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')||\'2099-12-31 23:59:59\'}', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="endDate" class="input-text Wdate" style="width:auto;">
+                <input type="text" onfocus="WdatePicker({maxDate:'#F{\'2099-12-31 23:59:59\'}', dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="endDate" class="input-text Wdate" style="width:auto;">
             </div>
         </div>
         <div class="row cl">
@@ -116,7 +116,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/promo/create",
+                url: "/promo/create",
                 data: {
                     "id": id,
                     "promoName": promoName,
@@ -143,7 +143,7 @@
             //获取活动详情
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/promo/get",
+                url: "/promo/get",
                 data: {
                     "id": getParam("id")
                 },

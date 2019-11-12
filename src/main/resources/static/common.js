@@ -4,7 +4,7 @@
 function getUserInfo() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/user/getuserinfo",
+        url: "/user/getuserinfo",
         xhrFields: {withCredentials: true},
         async: false,
         success: function (data) {
@@ -14,7 +14,7 @@ function getUserInfo() {
             } else {
                 alert("获取登录信息失败，原因为" + data.data.errMsg);
                 if (data.data.errCode == 20003) {
-                    window.location.href = "login.html";//跳转登录页面
+                    window.location.href = "/login";//跳转登录页面
                 }
             }
         },
@@ -28,14 +28,14 @@ function getUserInfo() {
  * 用户个人信息弹框
  */
 function myLoginInfo() {
-    layer_show("个人信息", "userinfo.html", "350", "400");
+    layer_show("个人信息", "/user/userInfo", "350", "400");
 }
 
 /**
  * 切换用户
  */
 function changeUser() {
-    window.location.href = "login.html";
+    window.location.href = "/login";
 }
 
 /**

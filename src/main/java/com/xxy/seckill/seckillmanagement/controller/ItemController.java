@@ -10,9 +10,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -130,5 +132,29 @@ public class ItemController extends BaseController {
             itemVO.setPromoStatus(0);
         }
         return itemVO;
+    }
+
+    @RequestMapping("/qryItem")
+    public String qryItem(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "qryitem";
+    }
+
+    @RequestMapping("/listItem")
+    public String listItem(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "listitem";
+    }
+
+    @RequestMapping("/getItem")
+    public String getItem(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "getitem";
+    }
+
+    @RequestMapping("/itemAdd")
+    public String itemAdd(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "item-add";
     }
 }

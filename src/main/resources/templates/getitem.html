@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <th class="text-r">商品名称：</th>
-            <td><label id="title" class=control-label"></label></td>
+            <td><label id="title" class="control-label"></label></td>
         </tr>
         <tr>
             <th class="text-r">商品描述：</th>
@@ -87,7 +87,7 @@
         //获取商品详情
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/item/get",
+            url: "/item/get",
             data: {
                 "id": getParam("id"),
             },
@@ -114,7 +114,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/order/createorder",
+                url: "/order/createorder",
                 data: {
                     "itemId": g_itemVo.id,
                     "amount": 1,
@@ -131,7 +131,7 @@
                         alert("下单失败，原因为" + data.data.errMsg);
                         if (data.data.errCode == 20003) {
                             var index = parent.layer.getFrameIndex(window.name);
-                            window.parent.location.href = "login.html";//跳转登录页面
+                            window.parent.location.href = "/login";//跳转登录页面
                             parent.layer.close(index);
                         }
                     }

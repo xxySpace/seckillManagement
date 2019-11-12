@@ -62,7 +62,7 @@
 			<dt ><i class="Hui-iconfont">&#xe620;</i> 营销活动<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="itemactivity" style="display: none;">
 				<ul>
-					<li><a href="qryitem.html" title="商品秒杀">商品秒杀</a></li>
+					<li><a href="/item/qryItem" title="商品秒杀">商品秒杀</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -70,8 +70,8 @@
 			<dt ><i class="Hui-iconfont">&#xe620;</i> 营销管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="itemmng" style="display: none;">
 				<ul>
-					<li><a href="listitem.html" title="商品管理">商品管理</a></li>
-					<li><a href="listpromo.html" title="活动管理">活动管理</a></li>
+					<li><a href="/item/listItem" title="商品管理">商品管理</a></li>
+					<li><a href="/promo/listPromo" title="活动管理">活动管理</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -79,9 +79,9 @@
 			<dt ><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="rolemng" style="display: none;">
 				<ul>
-					<li><a href="admin-role.html" title="角色管理">角色管理</a></li>
-					<li><a href="admin-permission.html" title="权限管理">权限管理</a></li>
-					<li><a href="admin-list.html" title="管理员列表">管理员列表</a></li>
+					<li><a href="/admin/admin-role" title="角色管理">角色管理</a></li>
+					<li><a href="/admin/admin-permission" title="权限管理">权限管理</a></li>
+					<li><a href="/admin/admin-list" title="管理员列表">管理员列表</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -89,11 +89,11 @@
 			<dt ><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd id="systemmng" style="display: block;">
 				<ul>
-					<li><a href="system-base.html" title="系统设置">系统设置</a></li>
-					<li><a href="system-category.html" title="栏目管理">栏目管理</a></li>
-					<li><a href="system-data.html" title="数据字典">数据字典</a></li>
-					<li><a href="system-shielding.html" title="屏蔽词">屏蔽词</a></li>
-					<li><a href="system-log.html" title="系统日志">系统日志</a></li>
+					<li><a href="/system/system-base" title="系统设置">系统设置</a></li>
+					<li><a href="/system/system-category" title="栏目管理">栏目管理</a></li>
+					<li><a href="/system/system-data" title="数据字典">数据字典</a></li>
+					<li><a href="/system/system-shielding" title="屏蔽词">屏蔽词</a></li>
+					<li><a href="/system/system-log" title="系统日志">系统日志</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -121,7 +121,7 @@
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
 					<a href="javascript:;" onclick="data_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-					<a href="javascript:;" class="btn btn-primary radius" id="dict_add" name="" onclick="layer_show('新增字典','dict-add.html','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</a>
+					<a href="javascript:;" class="btn btn-primary radius" id="dict_add" name="" onclick="layer_show('新增字典','/dict/dictAdd','','500')"><i class="Hui-iconfont">&#xe600;</i> 添加字典</a>
 			    </span>
 				<span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
 			</div>
@@ -134,7 +134,7 @@
 							<th width="80">类别</th>
 							<th width="105">值</th>
 							<th width="105">名称</th>
-							<th>备注</th>
+							<th width="200">备注</th>
 							<th width="105">状态</th>
 							<th width="100">操作</th>
 						</tr>
@@ -170,7 +170,7 @@ jQuery(document).ready(function () {
 		$.ajax({
 			type: "POST",
 			contentType: "application/x-www-form-urlencoded",
-			url: "http://localhost:8080/dict/listCount",
+			url: "/dict/listCount",
 			data: {
 				"catalog": catalog,
 				"state": state
@@ -195,7 +195,7 @@ function queryList(catalog, state) {
 	$.ajax({
 		type: "POST",
 		contentType: "application/x-www-form-urlencoded",
-		url: "http://localhost:8080/dict/list",
+		url: "/dict/list",
 		data: {
 			"catalog": catalog,
 			"state": state
@@ -219,8 +219,8 @@ function queryList(catalog, state) {
 function reloadDom() {
 	for (var i = 0; i < g_dictList.length; i++) {
 		var dictVo = g_dictList[i];
-		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\""+dictVo.id+"\" name=\"\"></td><td data-id='" + dictVo.id + "' id='dictDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td >" + dictVo.state + "</td>" +
-				"<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑字典','dict-add.html?id=" + dictVo.id + "&catalog=" + dictVo.catalog + "&value=" + dictVo.value + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+		var dom = "<tr class='text-c'><td><input type=\"checkbox\" value=\""+dictVo.id+"\" name=\"\"></td><td data-id='" + dictVo.id + "' id='dictDetail" + dictVo.id + "'>" + dictVo.id + "</td><td  data-id='" + dictVo.catalog + "'>" + dictVo.catalog + "</td><td data-id='" + dictVo.value + "'>" + dictVo.value + "</td><td>" + dictVo.name + "</td><td>" + dictVo.memo + "</td><td><span class='"+(dictVo.state=='生效'?'label label-success radius':'label label-default radius')+"'>"+ dictVo.state +"</span></td>" +
+				"<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑字典','/dict/dictAdd?id=" + dictVo.id + "&catalog=" + dictVo.catalog + "&value=" + dictVo.value + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
 		"<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"dict_del("+dictVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
 		$("#tbody").append($(dom));
 		/*$("#dictDetail" + dictVo.id).on("click", function (e) {
@@ -229,7 +229,6 @@ function reloadDom() {
 	}
 	if (!loadPage){
 		$('.table-sort').dataTable({
-			"aaSorting": [[ 1, "asc" ]],//默认第几个排序
 			"bStateSave": true,//状态保存
 			"aoColumnDefs": [
 				//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
@@ -253,7 +252,7 @@ function dict_del(id){
 	  $.ajax({
 		  type: "POST",
 		  contentType: "application/x-www-form-urlencoded",
-		  url: "http://localhost:8080/dict/delete",
+		  url: "/dict/delete",
 		  data: {
 			  "idList": id
 		  },

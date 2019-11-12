@@ -30,9 +30,9 @@
 </header>
 <div class="loginWraper">
     <div id="loginform" class="loginBox">
-        <form class="form form-horizontal" action="login.html" method="post">
+        <form class="form form-horizontal" action="/login" method="post">
             <div class="row cl">
-                <label class="form-label col-xs-3"><i class="Hui-iconfont">手机号：</i></label>
+                <label class="form-label col-xs-3"><i class="Hui-iconfont">账号：</i></label>
                 <div class="formControls col-xs-8">
                     <input id="telphone" name="telphone" type="text" placeholder="手机号" class="input-text size-L">
                 </div>
@@ -45,10 +45,11 @@
             </div>
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
-                    <input class="input-text size-L" type="text" placeholder="验证码"
-                           onblur="if(this.value==''){this.value='验证码'}" onclick="if(this.value=='验证码'){this.value='';}"
-                           value="验证码" style="width:150px;">
-                    <img src=""> <a id="kanbuq" href="javascript:;">看不清，换一张</a></div>
+                    <input class="input-text size-L" type="text" placeholder="验证码" id="verifyCode"
+                           value="" style="width:150px;">
+                    <img src="" id="createCheckCode"> <a id="blurry" href="javascript:;" onclick="getVCode()">看不清，换一张</a>
+                </div>
+
             </div>
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
@@ -63,11 +64,13 @@
 </body>
 
 <script>
+    getVCode();
     jQuery(document).ready(function () {
         //绑定login的click事件，用于用户登录请求
         $("#login").on("click", function () {
             var telphone = $("#telphone").val();
             var password = $("#password").val();
+            var verifyCode = $("#verifyCode").val();
             if (telphone == null || telphone == "") {
                 alert("手机号不能为空");
                 return false;
@@ -76,21 +79,28 @@
                 alert("密码不能为空");
                 return false;
             }
+            if (verifyCode == null || verifyCode == "") {
+                alert("请填写验证码");
+                return false;
+            }
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/user/login",
+                url: "/user/login",
                 data: {
-                    "telphone": $("#telphone").val(),
-                    "password": password
+                    "telphone": telphone,
+                    "password": password,
+                    "verifyCode":verifyCode
                 },
                 xhrFields: {withCredentials: true},
+                async: false,
                 success: function (data) {
                     if (data.status == "success") {
                         alert("登录成功");
-                        window.location.href = "home.html";
+                        window.location.href = "/login/home";
                     } else {
                         alert("用户登录失败，原因为" + data.data.errMsg);
+                        getVCode();
                     }
                 },
                 error: function (data) {
@@ -100,10 +110,21 @@
             return false;
         });
         $("#register").on("click", function () {
-            window.location.href = "register.html";
+            window.location.href = "/login/register";
         });
     });
-
-
+    function getVCode() {
+        document.getElementById("createCheckCode").src = timestamp("/user/verifyCode");
+    };
+    //为url添加时间戳
+    function timestamp(url) {
+        var getTimestamp = new Date().getTime();
+        if (url.indexOf("?") > -1) {
+            url = url + "&timestamp=" + getTimestamp
+        } else {
+            url = url + "?timestamp=" + getTimestamp
+        }
+        return url;
+    };
 </script>
 </html>

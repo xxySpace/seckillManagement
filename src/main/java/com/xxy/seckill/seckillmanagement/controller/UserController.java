@@ -7,14 +7,21 @@ import com.xxy.seckill.seckillmanagement.response.CommonRetrunType;
 import com.xxy.seckill.seckillmanagement.service.DictService;
 import com.xxy.seckill.seckillmanagement.service.UserService;
 import com.xxy.seckill.seckillmanagement.service.model.UserModel;
+import com.xxy.seckill.seckillmanagement.util.validatecode.IVerifyCodeGen;
+import com.xxy.seckill.seckillmanagement.util.validatecode.SimpleCharVerifyCodeGenImpl;
+import com.xxy.seckill.seckillmanagement.util.validatecode.VerifyCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -42,6 +49,31 @@ public class UserController extends BaseController {
     @Autowired
     private DictService dictService;
 
+    @RequestMapping(value = "/verifyCode")
+    public void verifyCode(HttpServletResponse response) throws BusinessException {
+        IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
+        try {
+            //设置长宽
+            VerifyCode verifyCode = iVerifyCodeGen.generate(80, 28);
+            String code = verifyCode.getCode();
+            //LOGGER.info(code);
+            //将VerifyCode绑定session
+            this.httpServletRequest.getSession().setAttribute("VERIFY_CODE", code);
+            //设置响应头
+            response.setHeader("Pragma", "no-cache");
+            //设置响应头
+            response.setHeader("Cache-Control", "no-cache");
+            //在代理服务器端防止缓冲
+            response.setDateHeader("Expires", 0);
+            //设置响应内容类型
+            response.setContentType("image/jpeg");
+            response.getOutputStream().write(verifyCode.getImgBytes());
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            throw new BusinessException(EmBusinessError.VALIDATION_ERROR);
+        }
+    }
+
     /**
      * 用户登录接口
      *
@@ -52,10 +84,15 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonRetrunType login(@RequestParam(name = "telphone") String telphone,
-                                  @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+                                  @RequestParam(name = "password") String password,
+                                  @RequestParam(name = "verifyCode") String verifyCode) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
         //入参校验
         if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+        //验证码校验
+        if (!verifyCode.equals((String) this.httpServletRequest.getSession().getAttribute("VERIFY_CODE"))) {
+            throw new BusinessException(EmBusinessError.VALIDATION_ERROR);
         }
         //用户登录服务，校验用户端登录是否合法
         UserModel userModel = userService.validateLogin(telphone, this.encodeByMd5(password));
@@ -159,6 +196,7 @@ public class UserController extends BaseController {
 
     /**
      * 页面加载的用户登录信息
+     *
      * @return
      * @throws BusinessException
      */
@@ -185,5 +223,11 @@ public class UserController extends BaseController {
         BeanUtils.copyProperties(userModel, userVO);
         userVO.setGender(genderMap.get(String.valueOf(userModel.getGender())));
         return userVO;
+    }
+
+    @RequestMapping("/userInfo")
+    public String userInfo(Model model, HttpServletResponse response) {
+        model.addAttribute("name", "子慕鱼");
+        return "userinfo";
     }
 }

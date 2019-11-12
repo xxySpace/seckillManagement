@@ -60,7 +60,7 @@
             <dt ><i class="Hui-iconfont">&#xe620;</i> 营销活动<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="itemactivity" style="display: none;">
                 <ul>
-                    <li><a href="qryitem.html" title="商品秒杀">商品秒杀</a></li>
+                    <li><a href="/item/qryItem" title="商品秒杀">商品秒杀</a></li>
                 </ul>
             </dd>
         </dl>
@@ -68,8 +68,8 @@
             <dt ><i class="Hui-iconfont">&#xe620;</i> 营销管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="itemmng" style="display: block;">
                 <ul>
-                    <li><a href="listitem.html" title="商品管理">商品管理</a></li>
-                    <li><a href="listpromo.html" title="活动管理">活动管理</a></li>
+                    <li><a href="/item/listItem" title="商品管理">商品管理</a></li>
+                    <li><a href="/promo/listPromo" title="活动管理">活动管理</a></li>
                 </ul>
             </dd>
         </dl>
@@ -77,9 +77,9 @@
             <dt ><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="rolemng" style="display: none;">
                 <ul>
-                    <li><a href="admin-role.html" title="角色管理">角色管理</a></li>
-                    <li><a href="admin-permission.html" title="权限管理">权限管理</a></li>
-                    <li><a href="admin-list.html" title="管理员列表">管理员列表</a></li>
+                    <li><a href="/admin/admin-role" title="角色管理">角色管理</a></li>
+                    <li><a href="/admin/admin-permission" title="权限管理">权限管理</a></li>
+                    <li><a href="/admin/admin-list" title="管理员列表">管理员列表</a></li>
                 </ul>
             </dd>
         </dl>
@@ -87,11 +87,11 @@
             <dt ><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd id="systemmng" style="display: none;">
                 <ul>
-                    <li><a href="system-base.html" title="系统设置">系统设置</a></li>
-                    <li><a href="system-category.html" title="栏目管理">栏目管理</a></li>
-                    <li><a href="system-data.html" title="数据字典">数据字典</a></li>
-                    <li><a href="system-shielding.html" title="屏蔽词">屏蔽词</a></li>
-                    <li><a href="system-log.html" title="系统日志">系统日志</a></li>
+                    <li><a href="/system/system-base" title="系统设置">系统设置</a></li>
+                    <li><a href="/system/system-category" title="栏目管理">栏目管理</a></li>
+                    <li><a href="/system/system-data" title="数据字典">数据字典</a></li>
+                    <li><a href="/system/system-shielding" title="屏蔽词">屏蔽词</a></li>
+                    <li><a href="/system/system-log" title="系统日志">系统日志</a></li>
                 </ul>
             </dd>
         </dl>
@@ -115,7 +115,7 @@
             <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"><a href="javascript:;" onclick="data_del()"
                                                                        class="btn btn-danger radius"><i
                     class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;"
-                                                                  onclick="layer_show('创建商品','item-add.html','','500')"
+                                                                  onclick="layer_show('创建商品','/item/itemAdd','','500')"
                                                                   class="btn btn-primary radius"><i
                     class="Hui-iconfont">&#xe600;</i> 创建商品</a></span> <span class="r">共有数据：<lable id="queryCount" style="font-weight: bold">0</lable> 条</span>
             </div>
@@ -163,7 +163,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/item/listCount",
+                url: "/item/listCount",
                 data: {
                     "title": title
                 },
@@ -187,7 +187,7 @@
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
-            url: "http://localhost:8080/item/list",
+            url: "/item/list",
             data: {
                 "title": title
             },
@@ -211,17 +211,16 @@
         for (var i = 0; i < g_itemList.length; i++) {
             var itemVo = g_itemList[i];
             var dom = "<tr class='text-c'><td><input type=\"checkbox\" value='"+itemVo.id+"' name=\"\"></td><td data-id='" + itemVo.id + "' id='itemDetail" + itemVo.id + "'>" + itemVo.id + "</td><td>" + itemVo.title + "</td><td style='width: 100px;height: auto'><img src='" + itemVo.imgUrl + "' height='120'></td><td>" + itemVo.description + "</td><td>" + itemVo.price + "</td><td>" + itemVo.sales + "</td>" +
-                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑商品','item-add.html?id=" + itemVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
+                "<td class=\"td-manage\"><a title=\"编辑\" href=\"javascript:;\" onclick=\"layer_show('编辑商品','/item/itemAdd?id=" + itemVo.id + "','','510')\" class=\"ml-5\" style=\"text-decoration:none\">" +
                 "<i class=\"Hui-iconfont\">&#xe6df;</i></a> <a title=\"删除\" href=\"javascript:;\" onclick=\"item_del("+itemVo.id+")\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe6e2;</i></a></td></tr>";
             $("#tbody").append($(dom));
             $("#itemDetail" + itemVo.id).on("click", function (e) {
                 //window.location.href="getitem.html?id="+$(this).data("id");
-                layer_show("商品详情", "getitem.html?id=" + $(this).data("id"), "600", "600");
+                layer_show("商品详情", "/item/getItem?id=" + $(this).data("id"), "600", "600");
             });
         }
         if (!loadPage){
             $('.table-sort').dataTable({
-                "aaSorting": [[ 1, "asc" ]],//默认第几个排序
                 "bStateSave": true,//状态保存
                 "aoColumnDefs": [
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
@@ -245,7 +244,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
-                url: "http://localhost:8080/item/delete",
+                url: "/item/delete",
                 data: {
                     "idList": id
                 },

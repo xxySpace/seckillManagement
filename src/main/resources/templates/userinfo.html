@@ -70,7 +70,7 @@
     function getUserInfo() {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/user/getuserinfo",
+            url: "/user/getuserinfo",
             xhrFields: {withCredentials: true},
             async: false,
             success: function (data) {
@@ -81,7 +81,7 @@
                     alert("获取登录信息失败，原因为" + data.data.errMsg);
                     if (data.data.errCode == 20003) {
                         var index = parent.layer.getFrameIndex(window.name);
-                        window.parent.location.href = "login.html";//跳转登录页面
+                        window.parent.location.href = "/login";//跳转登录页面
                         parent.layer.close(index);
                     }
                 }
